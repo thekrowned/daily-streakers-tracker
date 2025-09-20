@@ -27,7 +27,7 @@ app.get(
 );
 
 app.get("/api", (c) => {
-	return c.text("THIS ROUTE IS FIRE 🔥️🔥️🔥️ PUT IT DOWN 🔥️🔥️");
+	return c.text("* The fire was put down.");
 });
 
 serve(

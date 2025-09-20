@@ -4,13 +4,13 @@
 }
 
 :root {
-	--background: hsl(29, 100%, 85%);
+	--background: hsl(0, 100%, 90%);
 	--foreground: hsl(0, 0%, 0%);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: hsl(0, 0%, 15%);
+		--background: hsl(0, 35%, 15%);
 		--foreground: hsl(0, 0%, 100%);
 	}
 }
