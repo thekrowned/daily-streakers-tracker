@@ -1,5 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import { serveStatic } from "@hono/node-server/serve-static";
+import { trimTrailingSlash } from "hono/trailing-slash";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -8,8 +10,24 @@ if (isNaN(PORT)) {
 
 const app = new Hono();
 
-app.get("/", (c) => {
-	return c.text("Hello Hono!");
+app.use("*", trimTrailingSlash());
+
+app.get(
+	"/assets/*",
+	serveStatic({
+		root: "./",
+	})
+);
+
+app.get(
+	"/*",
+	serveStatic({
+		root: "./pages/",
+	})
+);
+
+app.get("/api", (c) => {
+	return c.text("THIS ROUTE IS FIRE 🔥️🔥️🔥️ PUT IT DOWN 🔥️🔥️");
 });
 
 serve(
