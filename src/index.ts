@@ -2,6 +2,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
+import { OsuAPI } from "./osu-api.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -28,6 +29,11 @@ app.get(
 
 app.get("/api", (c) => {
 	return c.text("* The fire was put down.");
+});
+
+app.get("/my-rank", async (c) => {
+	const myRank = await OsuAPI.getMyUserRank();
+	return c.text(`My osu rank is ${myRank}`);
 });
 
 serve(
