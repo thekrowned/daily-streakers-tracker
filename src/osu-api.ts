@@ -37,6 +37,11 @@ const OsuAPI = class {
 		const myRank = await OsuAPI.getUserRank(userId);
 		return myRank;
 	};
+
+	static getUser = async function (user: string | number) {
+		const data = await internalOsuAPI.getUser(user, Ruleset.osu);
+		return data;
+	};
 };
 
 export { OsuAPI };
