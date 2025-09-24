@@ -52,9 +52,10 @@ async function getPlayersInfo() {
 			total_participation: user.daily_challenge_user_stats.playcount,
 		};
 
-		const existingPlayer = await DB.players.getById(user.id);
+		const dbExistingPlayer = await DB.players.getById(user.id);
+		const existingPlayer = await dbExistingPlayer.getRowObjectsJson();
 
-		if (existingPlayer) {
+		if (existingPlayer.length != 0) {
 			await DB.players.update(playerInsertData);
 		} else {
 			await DB.players.add(playerInsertData);
