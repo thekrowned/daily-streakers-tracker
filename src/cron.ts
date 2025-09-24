@@ -5,6 +5,8 @@ import { OsuAPI } from "./osu-api.js";
 import { assertString } from "./utils/assert.js";
 import { DB } from "./db.js";
 
+const beginningDate = new Date("2024-07-25T00:00:00+00:00");
+
 async function getPlayersInfo() {
 	const logTime = new Date();
 	console.info("[getPlayersInfo]", logTime.toUTCString());
@@ -19,15 +21,17 @@ async function getPlayersInfo() {
 	for (let i = 0; i < playerNames.length; i++) {
 		const playerName = assertString(playerNames[i]);
 		console.info("[getPlayersInfo]", `Inserting ${playerName}`);
+
 		const user = await OsuAPI.getUser(playerName);
 
+		const lastUpdate = user.daily_challenge_user_stats.last_update;
+		const today = new Date();
+
 		const playedToday = (() => {
-			const lastUpdate = user.daily_challenge_user_stats.last_update;
 			const lastDate = lastUpdate?.getUTCDate();
 			const lastMonth = lastUpdate?.getUTCMonth();
 			const lastYear = lastUpdate?.getUTCFullYear();
 
-			const today = new Date();
 			const todayDate = today?.getUTCDate();
 			const todayMonth = today?.getUTCMonth();
 			const todayYear = today?.getUTCFullYear();
@@ -59,6 +63,34 @@ async function getPlayersInfo() {
 			await DB.players.update(playerInsertData);
 		} else {
 			await DB.players.add(playerInsertData);
+		}
+
+		const millisecondsSinceBeginning =
+			today.getTime() - beginningDate.getTime();
+		const daysSinceBeginning = Math.floor(
+			millisecondsSinceBeginning / 86400000
+		);
+
+		const streakerInsertData = {
+			id: user.id,
+			full_streaker:
+				user.daily_challenge_user_stats.daily_streak_current >=
+				daysSinceBeginning
+					? true
+					: false,
+			is_streaking:
+				user.daily_challenge_user_stats.daily_streak_current >= 2
+					? true
+					: false,
+		};
+
+		const dbExistingStreak = await DB.streaker_tracker.getById(user.id);
+		const existingStreak = await dbExistingStreak.getRowObjectsJson();
+
+		if (existingStreak.length != 0) {
+			await DB.streaker_tracker.update(streakerInsertData);
+		} else {
+			await DB.streaker_tracker.add(streakerInsertData);
 		}
 	}
 
