@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
+import { runCron } from "./cron.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -10,6 +11,8 @@ if (isNaN(PORT)) {
 }
 
 const app = new Hono();
+
+runCron();
 
 app.use("*", trimTrailingSlash());
 
