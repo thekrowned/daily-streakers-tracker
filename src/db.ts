@@ -127,6 +127,15 @@ const DB = class {
 
 	// === Streaker specific data ===
 	static streaker_tracker = {
+		async getById(id: number) {
+			const res = await storageConn.run(
+				"SELECT * FROM streaker_tracker WHERE player_id=$player_id",
+				{
+					player_id: id,
+				}
+			);
+			return res;
+		},
 		async getAll() {
 			const res = await storageConn.run("SELECT * FROM streaker_tracker");
 			return res;
