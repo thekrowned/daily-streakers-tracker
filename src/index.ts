@@ -4,6 +4,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
 import { runCron } from "./cron.js";
+import { DB } from "./db.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -37,6 +38,12 @@ app.get("/api", (c) => {
 app.get("/my-rank", async (c) => {
 	const myRank = await OsuAPI.getMyUserRank();
 	return c.text(`My osu rank is ${myRank}`);
+});
+
+app.get("/daily-streakers", async (c) => {
+	const dbData = await DB.players.getAll();
+	const players = await dbData.getRowObjectsJson();
+	return c.json(players);
 });
 
 serve(
