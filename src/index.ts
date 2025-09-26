@@ -32,15 +32,15 @@ app.get(
 );
 
 app.get("/api", (c) => {
-	return c.text("* The fire was put down.");
+	return c.text("Nope, not here.");
 });
 
-app.get("/my-rank", async (c) => {
+app.get("/api/my-rank", async (c) => {
 	const myRank = await OsuAPI.getMyUserRank();
 	return c.text(`My osu rank is ${myRank}`);
 });
 
-app.get("/daily-streakers", async (c) => {
+app.get("/api/daily-streakers", async (c) => {
 	const dbData = await DB.players_streaker.getAll();
 	const players = await dbData.getRowObjectsJson();
 
