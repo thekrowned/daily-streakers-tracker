@@ -13,8 +13,6 @@ if (isNaN(PORT)) {
 
 const app = new Hono();
 
-runCron();
-
 app.use("*", trimTrailingSlash());
 
 app.get(
@@ -56,3 +54,5 @@ serve(
 		console.log(`Server is running on http://localhost:${info.port}`);
 	}
 );
+
+runCron();
