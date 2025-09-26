@@ -1,0 +1,118 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+:root {
+	--background: hsl(0, 0%, 85%);
+	--foreground: hsl(0, 0%, 0%);
+
+	--header-background: hsl(297, 50%, 35%);
+	--header-foreground: hsl(0, 0%, 100%);
+	--header-shadow: hsl(0, 0%, 0%);
+
+	--card-background: hsl(0, 0%, 100%);
+	--card-foreground: hsl(0, 0%, 0%);
+	--card-shadow: hsla(0, 0%, 0%, 10%);
+
+	--streakers-item-background: hsl(0, 0%, 80%);
+	--streakers-item-text: hsl(0, 0%, 0%);
+	--streakers-item-outline-played: hsl(89, 100%, 20%);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: hsl(0, 0%, 10%);
+		--foreground: hsl(0, 0%, 100%);
+
+		--header-background: hsl(297, 50%, 30%);
+		--header-foreground: hsl(0, 0%, 100%);
+		--header-shadow: hsl(0, 0%, 0%);
+
+		--card-background: hsl(0, 0%, 25%);
+		--card-foreground: hsl(0, 0%, 100%);
+		--card-shadow: hsla(0, 0%, 0%, 10%);
+
+		--streakers-item-background: hsl(0, 0%, 10%);
+		--streakers-item-text: hsl(0, 0%, 100%);
+		--streakers-item-outline-played: hsl(89, 100%, 70%);
+	}
+}
+
+html {
+	background-color: var(--background);
+	color: var(--foreground);
+	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.header {
+	padding: 0.6rem;
+	display: flex;
+	flex-direction: row;
+	background-color: var(--header-background);
+	color: var(--header-foreground);
+	box-shadow: 0 0 0.4rem var(--header-shadow);
+	position: sticky;
+	top: 0;
+}
+
+.header__title {
+	font-size: 1.5rem;
+}
+
+main {
+	padding: 0.6rem;
+	display: flex;
+	gap: 0.6rem;
+	flex-direction: column;
+}
+
+.card {
+	border-radius: 0.1rem;
+	background-color: var(--card-background);
+	color: var(--card-foreground);
+	padding: 0.6rem;
+	box-shadow: 0 0.2rem 0.2rem var(--card-shadow);
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.card__title {
+	font-weight: bold;
+	font-size: 1.1rem;
+}
+
+.card__description {
+	font-size: 1rem;
+}
+
+.streakers-list {
+	background-color: transparent;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	gap: 0.3rem;
+	padding: 0;
+}
+
+.streakers-list__item {
+	background-color: var(--streakers-item-background);
+	color: var(--streakers-item-text);
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: row;
+	padding: 0.3rem 0.9rem;
+	gap: 0.3rem;
+}
+
+.streakers-list__item--played {
+	box-shadow: inset 0 0 0 0.2rem var(--streakers-item-outline-played);
+}
+
+@media (max-width: 576px) {
+}
+
+@media (max-width: 992px) {
+}
