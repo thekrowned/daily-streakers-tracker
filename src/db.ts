@@ -26,14 +26,12 @@ type playerType = {
 	rank_standard: number;
 	total_participation: number;
 	current_streak: number;
-	has_played_today: boolean;
 };
 const playerDbType = {
 	osu_id: INTEGER,
 	name: VARCHAR,
 	rank_standard: INTEGER,
 	current_streak: INTEGER,
-	has_played_today: BOOLEAN,
 	total_participation: INTEGER,
 	last_update: TIMESTAMPTZ,
 };
@@ -44,18 +42,19 @@ await storageConn.run(`
 	rank_standard       INTEGER,
 	total_participation INTEGER,
 	current_streak      INTEGER,
-	has_played_today    BOOLEAN,
 	last_update         TIMESTAMPTZ
 	)`);
 
 // ============ Streaker tracker ============
 type streakerTrackerType = {
 	id: number;
+	has_played_today: boolean;
 	full_streaker: boolean;
 	is_streaking: boolean;
 };
 const streakerTrackerDbType = {
 	player_id: INTEGER,
+	has_played_today: BOOLEAN,
 	full_streaker: BOOLEAN,
 	is_streaking: BOOLEAN,
 	last_update: TIMESTAMPTZ,
@@ -63,6 +62,7 @@ const streakerTrackerDbType = {
 await storageConn.run(`
 	CREATE TABLE streaker_tracker (
 	player_id           INTEGER REFERENCES players(osu_id),
+	has_played_today    BOOLEAN,
 	full_streaker       BOOLEAN,
 	is_streaking        BOOLEAN,
 	last_update         TIMESTAMPTZ
@@ -90,14 +90,13 @@ const DB = class {
 			await storageConn.run(
 				`
 				INSERT INTO players 
-				(osu_id, name, rank_standard, current_streak, has_played_today, total_participation, last_update)
-				VALUES ($osu_id, $name, $rank_standard, $current_streak, $has_played_today, $total_participation, $last_update)`,
+				(osu_id, name, rank_standard, current_streak, total_participation, last_update)
+				VALUES ($osu_id, $name, $rank_standard, $current_streak, $total_participation, $last_update)`,
 				{
 					osu_id: player.id,
 					name: player.name,
 					rank_standard: player.rank_standard,
 					current_streak: player.current_streak,
-					has_played_today: player.has_played_today,
 					total_participation: player.total_participation,
 					last_update: timestamp,
 				},
@@ -109,14 +108,13 @@ const DB = class {
 			await storageConn.run(
 				`
 				UPDATE players 
-				SET name=$name, rank_standard=$rank_standard, current_streak=$current_streak, has_played_today=$has_played_today, total_participation=$total_participation, last_update=$last_update
+				SET name=$name, rank_standard=$rank_standard, current_streak=$current_streak, total_participation=$total_participation, last_update=$last_update
 				WHERE osu_id=$osu_id`,
 				{
 					osu_id: player.id,
 					name: player.name,
 					rank_standard: player.rank_standard,
 					current_streak: player.current_streak,
-					has_played_today: player.has_played_today,
 					total_participation: player.total_participation,
 					last_update: timestamp,
 				},
@@ -145,10 +143,11 @@ const DB = class {
 			await storageConn.run(
 				`
 				INSERT INTO streaker_tracker 
-				(player_id, full_streaker, is_streaking, last_update)
-				VALUES ($player_id, $full_streaker, $is_streaking, $last_update)`,
+				(player_id, has_played_today, full_streaker, is_streaking, last_update)
+				VALUES ($player_id, $has_played_today, $full_streaker, $is_streaking, $last_update)`,
 				{
 					player_id: streaker.id,
+					has_played_today: streaker.has_played_today,
 					full_streaker: streaker.full_streaker,
 					is_streaking: streaker.is_streaking,
 					last_update: timestamp,
@@ -161,10 +160,11 @@ const DB = class {
 			await storageConn.run(
 				`
 				UPDATE streaker_tracker 
-				SET full_streaker=$full_streaker, is_streaking=$is_streaking, last_update=$last_update
+				SET has_played_today=$has_played_today, full_streaker=$full_streaker, is_streaking=$is_streaking, last_update=$last_update
 				WHERE player_id=$player_id`,
 				{
 					player_id: streaker.id,
+					has_played_today: streaker.has_played_today,
 					full_streaker: streaker.full_streaker,
 					is_streaking: streaker.is_streaking,
 					last_update: timestamp,

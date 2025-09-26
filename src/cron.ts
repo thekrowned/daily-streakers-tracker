@@ -57,7 +57,6 @@ async function getPlayersInfo() {
 				name: user.username,
 				rank_standard: user.statistics.global_rank ?? 0,
 				current_streak: user.daily_challenge_user_stats.daily_streak_current,
-				has_played_today: playedToday,
 				total_participation: user.daily_challenge_user_stats.playcount,
 			};
 
@@ -78,6 +77,7 @@ async function getPlayersInfo() {
 
 			const streakerInsertData = {
 				id: user.id,
+				has_played_today: playedToday,
 				full_streaker:
 					user.daily_challenge_user_stats.daily_streak_current >=
 					daysSinceBeginning
