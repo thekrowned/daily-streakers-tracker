@@ -41,15 +41,10 @@ app.get("/my-rank", async (c) => {
 });
 
 app.get("/daily-streakers", async (c) => {
-	const dbData = await DB.players.getAll();
+	const dbData = await DB.players_streaker.getAll();
 	const players = await dbData.getRowObjectsJson();
 
-	const dbData2 = await DB.streaker_tracker.getAll();
-	const streak = await dbData2.getRowObjectsJson();
-	return c.json({
-		players: players,
-		streakers: streak,
-	});
+	return c.json(players);
 });
 
 serve(

@@ -174,6 +174,26 @@ const DB = class {
 		},
 	};
 
+	// === Players & streaker data combined ===
+	static players_streaker = {
+		async getAll() {
+			const res = await storageConn.run(`
+				SELECT
+					pl.osu_id,
+					pl.name,
+					pl.rank_standard,
+					pl.total_participation,
+					pl.current_streak,
+					st.has_played_today,
+					st.full_streaker,
+					st.last_update
+				FROM players pl
+				LEFT JOIN streaker_tracker st ON st.player_id=pl.osu_id
+			`);
+			return res;
+		},
+	};
+
 	// === Timestamp functions ===
 	static getLocalTimestamp = async function (): Promise<DuckDBTimestampValue> {
 		const res = await storageConn.run("select current_localtimestamp()");
