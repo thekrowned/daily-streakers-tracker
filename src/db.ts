@@ -186,6 +186,7 @@ const DB = class {
 					pl.current_streak,
 					st.has_played_today,
 					st.full_streaker,
+					st.is_streaking,
 					st.last_update
 				FROM players pl
 				LEFT JOIN streaker_tracker st ON st.player_id=pl.osu_id
