@@ -37,6 +37,9 @@
 		--streakers-item-text: hsl(0, 0%, 100%);
 		--streakers-item-outline-played: hsl(89, 100%, 70%);
 	}
+	* {
+		color-scheme: dark;
+	}
 }
 
 html {
