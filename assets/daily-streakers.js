@@ -1,3 +1,5 @@
+let streakersData = null;
+
 const fullStreakersList = document.getElementById("streakers-list-full");
 const casualStreakersList = document.getElementById("streakers-list-casual");
 const notStreakersList = document.getElementById("streakers-list-not");
@@ -56,11 +58,11 @@ async function renderStreakersItem(streakers) {
 }
 
 async function main() {
-	const streakersData = await fetchStreakers();
-	const streakers = streakersData.toSorted(
+	const streakers = await fetchStreakers();
+	streakersData = streakers.toSorted(
 		(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
 	);
-	renderStreakersItem(streakers);
+	renderStreakersItem(streakersData);
 }
 
 main();
