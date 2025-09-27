@@ -60,6 +60,7 @@ html {
 	box-shadow: 0 0 0.4rem var(--header-shadow);
 	position: sticky;
 	top: 0;
+	z-index: 100;
 }
 
 .header__title {
