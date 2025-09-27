@@ -3,6 +3,9 @@ let streakersData = null;
 const fullStreakersList = document.getElementById("streakers-list-full");
 const casualStreakersList = document.getElementById("streakers-list-casual");
 const notStreakersList = document.getElementById("streakers-list-not");
+const sorterSelect = /** @type {HTMLSelectElement} */ (
+	document.getElementById("sorter__select")
+);
 
 function createStreakersItem(playerName, hasPlayedToday) {
 	const li = document.createElement("li");
@@ -57,11 +60,50 @@ async function renderStreakersItem(streakers) {
 	});
 }
 
+async function sortStreakers(streakers, mode) {
+	if (!Array.isArray(streakers)) {
+		throw new Error("Data is not of array type");
+	}
+	let streakersSorted = null;
+	switch (mode) {
+		case "name":
+			streakersSorted = streakers.toSorted(
+				(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
+			);
+			break;
+		case "rank":
+			streakersSorted = streakers.toSorted(
+				(a, b) => a.rank_standard - b.rank_standard
+			);
+			break;
+		case "streak":
+			// Sorted by name first and then by total streak
+			// There's probably a better way of doing this
+			streakersSorted = streakers.toSorted(
+				(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
+			);
+			streakersSorted = streakersSorted.toSorted(
+				(a, b) => b.current_streak - a.current_streak
+			);
+			break;
+		default:
+			break;
+	}
+	if (!Array.isArray(streakersSorted)) {
+		throw new Error("Failed to sort the streakers");
+	}
+	return streakersSorted;
+}
+
+sorterSelect.addEventListener("input", async (e) => {
+	const value = e.target.value;
+	streakersData = await sortStreakers(streakersData, value);
+	renderStreakersItem(streakersData);
+});
+
 async function main() {
 	const streakers = await fetchStreakers();
-	streakersData = streakers.toSorted(
-		(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
-	);
+	streakersData = await sortStreakers(streakers, "name");
 	renderStreakersItem(streakersData);
 }
 
