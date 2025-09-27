@@ -29,8 +29,15 @@ async function fetchStreakers() {
 	return streakers;
 }
 
-async function main() {
-	const streakers = await fetchStreakers();
+async function renderStreakersItem(streakers) {
+	if (!Array.isArray(streakers)) {
+		throw new Error("Data is not of array type");
+	}
+
+	fullStreakersList.innerHTML = "";
+	casualStreakersList.innerHTML = "";
+	notStreakersList.innerHTML = "";
+
 	streakers.forEach((player) => {
 		const playerElement = createStreakersItem(
 			player.name,
@@ -46,6 +53,14 @@ async function main() {
 			}
 		}
 	});
+}
+
+async function main() {
+	const streakersData = await fetchStreakers();
+	const streakers = streakersData.toSorted(
+		(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
+	);
+	renderStreakersItem(streakers);
 }
 
 main();
