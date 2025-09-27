@@ -10,14 +10,23 @@ const sorterSelect = /** @type {HTMLSelectElement} */ (
 );
 const spanInfo = document.getElementById("info");
 
-function createStreakersItem(playerName, hasPlayedToday) {
+function createStreakersItem(playerName, osuId, hasPlayedToday) {
 	const li = document.createElement("li");
 	li.classList.add("streakers-list__item");
-	li.textContent = playerName;
+
+	const link = document.createElement("a");
+	link.classList.add("streakers-list__link");
+	link.textContent = playerName;
+	link.setAttribute("target", "_blank");
+	link.href = `https://osu.ppy.sh/users/${osuId}`;
+
+	li.appendChild(link);
+
 	if (hasPlayedToday) {
 		li.classList.add("streakers-list__item--played");
-		li.setAttribute("aria-description", "Played today");
+		link.setAttribute("aria-description", "Played today");
 	}
+
 	return li;
 }
 
@@ -49,6 +58,7 @@ async function renderStreakersItem(streakers) {
 	streakers.forEach((player) => {
 		const playerElement = createStreakersItem(
 			player.name,
+			player.osu_id,
 			player.has_played_today
 		);
 		if (player.full_streaker) {
