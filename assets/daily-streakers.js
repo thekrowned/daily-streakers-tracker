@@ -8,6 +8,7 @@ const notStreakersList = document.getElementById("streakers-list-not");
 const sorterSelect = /** @type {HTMLSelectElement} */ (
 	document.getElementById("sorter__select")
 );
+const spanInfo = document.getElementById("info");
 
 function createStreakersItem(playerName, hasPlayedToday) {
 	const li = document.createElement("li");
@@ -120,6 +121,35 @@ async function main() {
 	sorterSelect.value = sortBy;
 	streakersData = await sortStreakers(streakers, sortBy);
 	renderStreakersItem(streakersData);
+	// Generate last update information based on the last-est last update
+	const lastUpdates = streakersData.map((players) => {
+		const dateString = players.last_update;
+		const dateObject = new Date(dateString);
+		const dateNumber = dateObject.getTime();
+
+		return {
+			text: dateString,
+			time: dateNumber,
+		};
+	});
+
+	const lastUpdate = lastUpdates.reduce((accumulator, currentValue) => {
+		if (currentValue.time > (accumulator?.time ?? 0)) {
+			return {
+				text: currentValue.text,
+				time: currentValue.time,
+			};
+		} else {
+			return {
+				text: accumulator.text,
+				time: accumulator.time,
+			};
+		}
+	});
+
+	const lastUpdateDate = new Date(lastUpdate.text);
+
+	info.textContent = `All items are updated every 30 minutes. (last update: ${lastUpdateDate.toUTCString()})`;
 }
 
 main();
