@@ -149,7 +149,7 @@ async function main() {
 
 	const lastUpdateDate = new Date(lastUpdate.text);
 
-	info.textContent = `All items are updated every 30 minutes. (last update: ${lastUpdateDate.toUTCString()})`;
+	spanInfo.textContent = `All items are updated every 30 minutes. (last update: ${lastUpdateDate.toUTCString()})`;
 }
 
 main();
