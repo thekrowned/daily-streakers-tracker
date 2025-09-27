@@ -1,5 +1,7 @@
 let streakersData = null;
 
+const LOCAL_STORAGE_AVAILABLE = storageAvailable("localStorage");
+
 const fullStreakersList = document.getElementById("streakers-list-full");
 const casualStreakersList = document.getElementById("streakers-list-casual");
 const notStreakersList = document.getElementById("streakers-list-not");
@@ -99,11 +101,24 @@ sorterSelect.addEventListener("input", async (e) => {
 	const value = e.target.value;
 	streakersData = await sortStreakers(streakersData, value);
 	renderStreakersItem(streakersData);
+	if (LOCAL_STORAGE_AVAILABLE) {
+		localStorage.setItem("sort-by", value);
+	}
 });
 
 async function main() {
 	const streakers = await fetchStreakers();
-	streakersData = await sortStreakers(streakers, "name");
+	let sortBy = "name";
+	if (LOCAL_STORAGE_AVAILABLE) {
+		const sortByInStorage = localStorage.getItem("sort-by");
+		if (sortByInStorage) {
+			sortBy = sortByInStorage;
+		} else {
+			localStorage.setItem("sort-by", sortBy);
+		}
+	}
+	sorterSelect.value = sortBy;
+	streakersData = await sortStreakers(streakers, sortBy);
 	renderStreakersItem(streakersData);
 }
 
