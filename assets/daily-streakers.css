@@ -15,7 +15,7 @@
 	--card-foreground: hsl(0, 0%, 0%);
 	--card-shadow: hsla(0, 0%, 0%, 10%);
 
-	--streakers-item-background: hsl(0, 0%, 80%);
+	--streakers-item-background: hsl(0, 0%, 90%);
 	--streakers-item-text: hsl(0, 0%, 0%);
 	--streakers-item-outline-played: hsl(89, 100%, 20%);
 }
