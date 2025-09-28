@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
-import { getPlayersInfo } from "./cron.js";
+import { getPlayersInfo } from "./tools/cron.js";
 import { DB } from "./db/query.js";
 import { TimerManager } from "./utils/timer-manager.js";
 

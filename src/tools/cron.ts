@@ -1,9 +1,9 @@
 // Yeah, it's all setTimeout sorry
 import path from "path";
-import { readJson } from "./utils/read-json.js";
-import { OsuAPI } from "./osu-api.js";
-import { assertString } from "./utils/assert.js";
-import { DB } from "./db/query.js";
+import { readJson } from "../utils/read-json.js";
+import { OsuAPI } from "../osu-api.js";
+import { assertString } from "../utils/assert.js";
+import { DB } from "../db/query.js";
 
 const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 
