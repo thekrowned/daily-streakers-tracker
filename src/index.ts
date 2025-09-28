@@ -3,8 +3,9 @@ import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
-import { runCron } from "./cron.js";
+import { getPlayersInfo } from "./cron.js";
 import { DB } from "./db/query.js";
+import { TimerManager } from "./utils/timer-manager.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -55,4 +56,8 @@ serve(
 	}
 );
 
-runCron();
+TimerManager.addInterval({
+	name: "Player Info",
+	callback: getPlayersInfo,
+	time: 1800_000,
+});

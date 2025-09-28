@@ -8,13 +8,6 @@ import { DB } from "./db/query.js";
 const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 
 async function getPlayersInfo() {
-	const logTime = new Date();
-	console.info("[getPlayersInfo]", logTime.toUTCString());
-
-	const TIMEOUT = 1800_000;
-	const TIMEOUT_RETRY = 60_000;
-	let ERROR_STATUS = false;
-
 	try {
 		const playerNames = await readJson(
 			path.join(path.resolve(), "src", "tracked-players.json")
@@ -100,15 +93,7 @@ async function getPlayersInfo() {
 		}
 	} catch (error) {
 		console.error("[getPlayersInfo]", error);
-		ERROR_STATUS = true;
 	}
-
-	setTimeout(() => getPlayersInfo(), ERROR_STATUS ? TIMEOUT_RETRY : TIMEOUT);
 }
 
-async function runCron() {
-	console.log("Running cron");
-	getPlayersInfo();
-}
-
-export { runCron };
+export { getPlayersInfo };
