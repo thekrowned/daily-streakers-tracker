@@ -4,7 +4,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
 import { runCron } from "./cron.js";
-import { DB } from "./db/db.js";
+import { DB } from "./db/query.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
