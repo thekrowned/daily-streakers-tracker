@@ -1,48 +1,7 @@
-import {
-	BOOLEAN,
-	DuckDBInstance,
-	DuckDBTimestampValue,
-	DuckDBTimestampTZValue,
-	INTEGER,
-	TIMESTAMPTZ,
-	VARCHAR,
-} from "@duckdb/node-api";
-
-const instance = await DuckDBInstance.create("storage.db");
-
-const storageConn = await instance.connect();
-
-// ============ Player table ============
-type playerType = {
-	id: number;
-	name: string;
-	rank_standard: number;
-	total_participation: number;
-	current_streak: number;
-};
-const playerDbType = {
-	osu_id: INTEGER,
-	name: VARCHAR,
-	rank_standard: INTEGER,
-	current_streak: INTEGER,
-	total_participation: INTEGER,
-	last_update: TIMESTAMPTZ,
-};
-
-// ============ Streaker tracker ============
-type streakerTrackerType = {
-	id: number;
-	has_played_today: boolean;
-	full_streaker: boolean;
-	is_streaking: boolean;
-};
-const streakerTrackerDbType = {
-	player_id: INTEGER,
-	has_played_today: BOOLEAN,
-	full_streaker: BOOLEAN,
-	is_streaking: BOOLEAN,
-	last_update: TIMESTAMPTZ,
-};
+import { DuckDBTimestampValue, DuckDBTimestampTZValue } from "@duckdb/node-api";
+import { storageConn } from "./conn.js";
+import type { playerType, streakerTrackerType } from "./types.js";
+import { playerDbType, streakerTrackerDbType } from "./duckdb-types.js";
 
 // ============ Start of DB class ============
 const DB = class {
