@@ -20,5 +20,9 @@ Install [Git](https://git-scm.com/downloads) and [Nodejs](https://nodejs.org/en/
 3. Install the dependencies:<br>
 `npm i`
 4. Copy the **".env.sample"** file to **".env"**, then follow the instructions to fill in the empty variables
-5. Run the app:<br>
-`npm run dev`
+5. Build the app:<br>
+`npm run build`
+6. Initialise the database table:<br>
+`npm run db:init`
+7. Run the app:<br>
+`npm run start`
