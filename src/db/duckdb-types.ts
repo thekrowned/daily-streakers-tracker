@@ -1,5 +1,8 @@
 import { BOOLEAN, INTEGER, TIMESTAMPTZ, VARCHAR } from "@duckdb/node-api";
 
+// These are DuckDB special types intended for helping SQL insertion
+// DO NOT USE OUTSIDE DuckDB'S OWN FUNCTION
+
 const playerDbType = {
 	osu_id: INTEGER,
 	name: VARCHAR,
