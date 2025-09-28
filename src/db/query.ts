@@ -1,6 +1,6 @@
 import { DuckDBTimestampValue, DuckDBTimestampTZValue } from "@duckdb/node-api";
 import { storageConn } from "./conn.js";
-import type { playerType, streakerTrackerType } from "./types.js";
+import type { playerType, streakerTrackerType } from "./insert-types.js";
 import { playerDbType, streakerTrackerDbType } from "./duckdb-types.js";
 
 // ============ Start of DB class ============
