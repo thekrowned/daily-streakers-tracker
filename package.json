@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "tsx --env-file=.env --watch src/index.ts",
     "build": "tsc",
-    "start": "node --env-file=.env dist/index.js"
+    "start": "node --env-file=.env dist/index.js",
+    "db:init": "node --env-file=.env dist/db/init.js"
   },
   "dependencies": {
     "@duckdb/node-api": "^1.4.0-r.1",
