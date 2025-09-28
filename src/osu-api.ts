@@ -1,7 +1,7 @@
-import { User } from "osu-api-v2-js";
-import { API, Ruleset } from "osu-api-v2-js";
+import { API, Ruleset, APIError } from "osu-api-v2-js";
 import { assertString, assertNumber } from "./utils/assert.js";
 import { convertNumber } from "./utils/convert.js";
+import { TimerManager } from "./utils/timer-manager.js";
 
 // Check whether these variables exist
 const OSU_OWN_CLIENT_ID = process.env.OSU_OWN_CLIENT_ID;
@@ -24,7 +24,34 @@ async function createOsuAPI() {
 	return api;
 }
 
-const internalOsuAPI = await createOsuAPI();
+async function regenerateAPI() {
+	console.info(`Regenerating API...`);
+	internalOsuAPI = await createOsuAPI();
+}
+
+let internalOsuAPI = await createOsuAPI();
+
+TimerManager.addInterval({
+	name: "API Check",
+	callback: checkApiValidity,
+	time: 3600_000,
+});
+
+async function checkApiValidity() {
+	const now = new Date();
+	try {
+		const expiryDate = internalOsuAPI.expires;
+		console.info(`[checkApiValidity] Expiry date: ${expiryDate}`);
+		if (expiryDate.getDate() - now.getDate() <= 4000_000) {
+			regenerateAPI();
+		}
+	} catch (error) {
+		console.error(error);
+		if ((error as APIError)?.message == "Unauthorized") {
+			regenerateAPI();
+		}
+	}
+}
 
 const OsuAPI = class {
 	static getUserRank = async function (user: string | number): Promise<number> {
