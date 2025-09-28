@@ -7,7 +7,7 @@ import { DB } from "../db/query.js";
 
 const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 
-async function getPlayersInfo() {
+async function updatePlayersInfo() {
 	try {
 		const playerNames = await readJson(
 			path.join(path.resolve(), "src", "tracked-players.json")
@@ -18,7 +18,7 @@ async function getPlayersInfo() {
 		}
 		for (let i = 0; i < playerNames.length; i++) {
 			const playerName = assertString(playerNames[i]);
-			console.info("[getPlayersInfo]", `Inserting ${playerName}`);
+			console.info("[updatePlayersInfo]", `Inserting ${playerName}`);
 
 			const user = await OsuAPI.getUser(playerName);
 
@@ -92,8 +92,8 @@ async function getPlayersInfo() {
 			}
 		}
 	} catch (error) {
-		console.error("[getPlayersInfo]", error);
+		console.error("[updatePlayersInfo]", error);
 	}
 }
 
-export { getPlayersInfo };
+export { updatePlayersInfo };
