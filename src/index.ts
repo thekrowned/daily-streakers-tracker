@@ -60,4 +60,5 @@ TimerManager.addInterval({
 	name: "Player Info",
 	callback: updatePlayersInfo,
 	time: 1800_000,
+	executeImmediately: true,
 });

@@ -39,10 +39,12 @@ const TimerManager = class {
 		name,
 		callback,
 		time,
+		executeImmediately = false,
 	}: {
 		name: string;
 		callback: () => void;
 		time: number;
+		executeImmediately?: boolean;
 	}) {
 		const timerIndex = TimerManager.findIndexExistingTimer(name);
 		if (timerIndex >= 0) {
@@ -50,7 +52,10 @@ const TimerManager = class {
 			return false;
 		}
 
-		TimerManager.handleExecution(name, callback);
+		if (executeImmediately) {
+			TimerManager.handleExecution(name, callback);
+		}
+
 		const timer = setInterval(() => {
 			TimerManager.handleExecution(name, callback);
 		}, time);
