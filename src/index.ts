@@ -17,13 +17,6 @@ const app = new Hono();
 app.use("*", trimTrailingSlash());
 
 app.get(
-	"/assets/*",
-	serveStatic({
-		root: "./",
-	})
-);
-
-app.get(
 	"/*",
 	serveStatic({
 		root: "./pages/",
