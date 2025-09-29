@@ -31,7 +31,7 @@ function createStreakersItem(playerName, osuId, hasPlayedToday) {
 }
 
 async function fetchStreakers() {
-	const res = await fetch("/api/daily-streakers");
+	const res = await fetch("./api/daily-streakers");
 
 	if (!res.ok || res.status != 200) {
 		throw new Error("Error fetching data");
