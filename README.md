@@ -1,6 +1,6 @@
-# Website
+# Daily Streakers Tracker
 
-Yes.
+A website to track daily streakers (thx) from a specified list
 
 ## Prerequisites
 

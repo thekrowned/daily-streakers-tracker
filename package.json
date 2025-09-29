@@ -1,5 +1,5 @@
 {
-  "name": "website-krowned",
+  "name": "daily-streakers-tracker",
   "type": "module",
   "scripts": {
     "dev": "tsx --env-file=.env --watch src/index.ts",
