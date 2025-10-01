@@ -78,10 +78,22 @@ async function sortStreakers(streakers, mode) {
 		throw new Error("Data is not of array type");
 	}
 	let streakersSorted = null;
+
+	const nameSortValue = (a, b) => {
+		if (typeof a != "string" || typeof b != "string") {
+			throw new Error("Both values have to be string");
+		}
+		if (a.toUpperCase() === b.toUpperCase()) {
+			return 0;
+		} else {
+			return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
+		}
+	};
+
 	switch (mode) {
 		case "name":
-			streakersSorted = streakers.toSorted(
-				(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
+			streakersSorted = streakers.toSorted((a, b) =>
+				nameSortValue(a.name, b.name)
 			);
 			break;
 		case "rank":
@@ -92,8 +104,8 @@ async function sortStreakers(streakers, mode) {
 		case "streak":
 			// Sorted by name first and then by total streak
 			// There's probably a better way of doing this
-			streakersSorted = streakers.toSorted(
-				(a, b) => a.name.toUpperCase() > b.name.toUpperCase()
+			streakersSorted = streakers.toSorted((a, b) =>
+				nameSortValue(a.name, b.name)
 			);
 			streakersSorted = streakersSorted.toSorted(
 				(a, b) => b.current_streak - a.current_streak
