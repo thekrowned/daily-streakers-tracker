@@ -17,7 +17,10 @@ async function updatePlayersInfo() {
 			throw new Error("The JSON file should be in array");
 		}
 		for (let i = 0; i < playerNames.length; i++) {
-			const playerName = assertString(playerNames[i]);
+			const playerName = playerNames[i];
+			if (typeof playerName != "string" && typeof playerName != "number") {
+				throw new Error("Player must be string or number");
+			}
 			console.info("[updatePlayersInfo]", `Inserting ${playerName}`);
 
 			const user = await OsuAPI.getUser(playerName);
