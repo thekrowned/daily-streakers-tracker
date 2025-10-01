@@ -69,6 +69,14 @@ const OsuAPI = class {
 		const data = await internalOsuAPI.getUser(user, Ruleset.osu);
 		return data;
 	};
+
+	static lookupUsers = async function (userIds: number[]) {
+		if (userIds.length > 50) {
+			throw new Error("Too many users to fetch for!");
+		}
+		const data = await internalOsuAPI.lookupUsers(userIds);
+		return data;
+	};
 };
 
 export { OsuAPI };
