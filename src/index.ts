@@ -6,6 +6,7 @@ import { OsuAPI } from "./osu-api.js";
 import { updatePlayersInfo } from "./tools/update-players.js";
 import { DB } from "./db/query.js";
 import { TimerManager } from "./utils/timer-manager.js";
+import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -54,4 +55,10 @@ TimerManager.addInterval({
 	callback: updatePlayersInfo,
 	time: 1800_000,
 	executeImmediately: true,
+});
+
+TimerManager.addInterval({
+	name: "Crawler",
+	callback: crawlAndUpdateDailyPlayers,
+	time: 900_000,
 });
