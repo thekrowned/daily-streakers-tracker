@@ -57,8 +57,8 @@ TimerManager.addInterval({
 	executeImmediately: true,
 });
 
-TimerManager.addInterval({
-	name: "Crawler",
-	callback: crawlAndUpdateDailyPlayers,
-	time: 900_000,
-});
+// TimerManager.addInterval({
+// 	name: "Crawler",
+// 	callback: crawlAndUpdateDailyPlayers,
+// 	time: 900_000,
+// });
