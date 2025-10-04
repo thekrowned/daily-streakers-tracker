@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 import { DB } from "../db/query.js";
+import { ConsolePrefixed } from "../utils/console-prefixed.js";
+const consolePref = new ConsolePrefixed("[crawlAndUpdateDailyPlayers]");
 
 async function crawlAndUpdateDailyPlayers() {
 	const BASE_URL = "https://osu.ppy.sh";
@@ -20,7 +22,7 @@ async function crawlAndUpdateDailyPlayers() {
 	while (browsingUrl) {
 		const currentBrowsingUrl: string = browsingUrl;
 		let nextBrowsingUrl = null;
-		console.info(`[crawlAndUpdateDailyPlayers] Navigating ${browsingUrl}`);
+		consolePref.info(`Navigating ${browsingUrl}`);
 		try {
 			// Navigate to the specified url
 			await page.goto(currentBrowsingUrl);
@@ -85,24 +87,24 @@ async function crawlAndUpdateDailyPlayers() {
 				nextBrowsingUrl = detectedNextPageurl;
 			}
 		} catch (error) {
-			console.error("[crawlAndUpdateDailyPlayers] ", error);
+			consolePref.error(error);
 			nextBrowsingUrl = null;
 		} finally {
 			if (typeof nextBrowsingUrl == "string") {
 				if (currentBrowsingUrl == nextBrowsingUrl) {
-					console.error("[crawlAndUpdateDailyPlayers] Looping detected");
+					consolePref.error("Looping detected");
 					browsingUrl = null;
 				} else {
 					browsingUrl = nextBrowsingUrl;
 				}
 			} else {
-				console.info("[crawlAndUpdateDailyPlayers] End of navigation");
+				consolePref.info("End of navigation");
 				browsingUrl = null;
 			}
 		}
 	}
 
-	console.info("[crawlAndUpdateDailyPlayers] Closing browser session");
+	consolePref.info("Closing browser session");
 	await browser.close();
 
 	for (let i = 0; i < allDailyPlayers.length; i++) {

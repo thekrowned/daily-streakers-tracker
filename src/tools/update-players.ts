@@ -4,6 +4,9 @@ import { readJson } from "../utils/read-json.js";
 import { OsuAPI } from "../osu-api.js";
 import { assertString } from "../utils/assert.js";
 import { DB } from "../db/query.js";
+import { ConsolePrefixed } from "../utils/console-prefixed.js";
+
+const consolePref = new ConsolePrefixed("[updatePlayersInfo]");
 
 const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 
@@ -21,7 +24,7 @@ async function updatePlayersInfo() {
 			if (typeof playerName != "string" && typeof playerName != "number") {
 				throw new Error("Player must be string or number");
 			}
-			console.info("[updatePlayersInfo]", `Inserting ${playerName}`);
+			consolePref.info(`Inserting ${playerName}`);
 
 			const user = await OsuAPI.getUser(playerName);
 
@@ -95,7 +98,7 @@ async function updatePlayersInfo() {
 			}
 		}
 	} catch (error) {
-		console.error("[updatePlayersInfo]", error);
+		consolePref.error(error);
 	}
 }
 
