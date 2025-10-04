@@ -19,14 +19,17 @@ const TimerManager = class {
 		return timerIndex;
 	};
 
-	static handleExecution = function (name: string, callback: () => void) {
+	static handleExecution = async function (
+		name: string,
+		callback: () => Promise<void>
+	) {
 		const logTime = new Date();
 		console.info(
 			`[TimerManager] Running ${name} (${callback.name})`,
 			logTime.toUTCString()
 		);
 		try {
-			callback();
+			await callback();
 		} catch (error) {
 			console.error(
 				`There was an unhandled error while executing ${name} (${callback.name})`
@@ -42,7 +45,7 @@ const TimerManager = class {
 		executeImmediately = false,
 	}: {
 		name: string;
-		callback: () => void;
+		callback: () => Promise<void>;
 		time: number;
 		executeImmediately?: boolean;
 	}) {
@@ -73,7 +76,7 @@ const TimerManager = class {
 		time,
 	}: {
 		name: string;
-		callback: () => void;
+		callback: () => Promise<void>;
 		time: number;
 	}) {
 		const timerIndex = TimerManager.findIndexExistingTimer(name);
