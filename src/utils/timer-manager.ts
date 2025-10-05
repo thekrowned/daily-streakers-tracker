@@ -1,3 +1,6 @@
+import { ConsolePrefixed } from "./console-prefixed.js";
+const consolePref = new ConsolePrefixed("[Timer Manager]");
+
 enum RepetitionType {
 	INTERVAL,
 	TIMEOUT,
@@ -19,19 +22,21 @@ const TimerManager = class {
 		return timerIndex;
 	};
 
-	static handleExecution = function (name: string, callback: () => void) {
+	static handleExecution = async function (
+		name: string,
+		callback: () => Promise<void>
+	) {
 		const logTime = new Date();
-		console.info(
-			`[TimerManager] Running ${name} (${callback.name})`,
-			logTime.toUTCString()
+		consolePref.info(
+			`Running ${name} (${callback.name}) ${logTime.toUTCString()}`
 		);
 		try {
-			callback();
+			await callback();
 		} catch (error) {
-			console.error(
+			consolePref.error(
 				`There was an unhandled error while executing ${name} (${callback.name})`
 			);
-			console.error(error);
+			consolePref.error(error);
 		}
 	};
 
@@ -42,13 +47,13 @@ const TimerManager = class {
 		executeImmediately = false,
 	}: {
 		name: string;
-		callback: () => void;
+		callback: () => Promise<void>;
 		time: number;
 		executeImmediately?: boolean;
 	}) {
 		const timerIndex = TimerManager.findIndexExistingTimer(name);
 		if (timerIndex >= 0) {
-			console.error("Name already used!");
+			consolePref.error("Name already used!");
 			return false;
 		}
 
@@ -73,12 +78,12 @@ const TimerManager = class {
 		time,
 	}: {
 		name: string;
-		callback: () => void;
+		callback: () => Promise<void>;
 		time: number;
 	}) {
 		const timerIndex = TimerManager.findIndexExistingTimer(name);
 		if (timerIndex >= 0) {
-			console.error("Name already used!");
+			consolePref.error("Name already used!");
 			return false;
 		}
 
@@ -106,7 +111,7 @@ const TimerManager = class {
 			TimerManager.timers.splice(timerIndex, 1);
 			return true;
 		} else {
-			console.error("That timer doesn't exist!");
+			consolePref.error("That timer doesn't exist!");
 			return false;
 		}
 	};
