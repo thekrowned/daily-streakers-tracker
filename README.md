@@ -14,9 +14,9 @@ Install [Git](https://git-scm.com/downloads) and [Nodejs](https://nodejs.org/en/
 ## Getting started
 0. Open the terminal
 1. Clone this repo:<br>
-`git clone https://gitlab.com/thekrowned/website.git`
+`git clone https://github.com/thekrowned/daily-streakers-tracker.git`
 2. Go to the newly created folder:<br>
-`cd website`
+`cd daily-streakers-tracker`
 3. Install the dependencies:<br>
 `npm i`
 4. Copy the **".env.sample"** file to **".env"**, then follow the instructions to fill in the empty variables
