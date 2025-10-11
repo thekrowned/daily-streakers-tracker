@@ -57,6 +57,7 @@ async function updatePlayersInfo() {
 				rank_standard: user.statistics.global_rank ?? 0,
 				current_streak: user.daily_challenge_user_stats.daily_streak_current,
 				total_participation: user.daily_challenge_user_stats.playcount,
+				best_daily_streak: user.daily_challenge_user_stats.daily_streak_best,
 			};
 
 			const dbExistingPlayer = await DB.players.getById(user.id);
