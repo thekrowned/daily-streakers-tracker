@@ -111,6 +111,14 @@ async function sortStreakers(streakers, mode) {
 				(a, b) => b.current_streak - a.current_streak
 			);
 			break;
+		case "best_daily_streak":
+			streakersSorted = streakers.toSorted((a, b) =>
+				nameSortValue(a.name, b.name)
+			);
+			streakersSorted = streakersSorted.toSorted(
+				(a, b) => b.best_daily_streak - a.best_daily_streak
+			);
+			break;
 		default:
 			break;
 	}
