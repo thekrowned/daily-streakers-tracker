@@ -25,14 +25,15 @@ const DB = class {
 			await storageConn.run(
 				`
 				INSERT INTO players 
-				(osu_id, name, rank_standard, current_streak, total_participation, last_update)
-				VALUES ($osu_id, $name, $rank_standard, $current_streak, $total_participation, $last_update)`,
+				(osu_id, name, rank_standard, current_streak, best_daily_streak, total_participation, last_update)
+				VALUES ($osu_id, $name, $rank_standard, $current_streak, $best_daily_streak, $total_participation, $last_update)`,
 				{
 					osu_id: player.id,
 					name: player.name,
 					rank_standard: player.rank_standard,
 					current_streak: player.current_streak,
 					total_participation: player.total_participation,
+					best_daily_streak: player.best_daily_streak,
 					last_update: timestamp,
 				},
 				playerDbType
@@ -43,7 +44,7 @@ const DB = class {
 			await storageConn.run(
 				`
 				UPDATE players 
-				SET name=$name, rank_standard=$rank_standard, current_streak=$current_streak, total_participation=$total_participation, last_update=$last_update
+				SET name=$name, rank_standard=$rank_standard, current_streak=$current_streak, best_daily_streak=$best_daily_streak, total_participation=$total_participation, last_update=$last_update
 				WHERE osu_id=$osu_id`,
 				{
 					osu_id: player.id,
@@ -51,6 +52,7 @@ const DB = class {
 					rank_standard: player.rank_standard,
 					current_streak: player.current_streak,
 					total_participation: player.total_participation,
+					best_daily_streak: player.best_daily_streak,
 					last_update: timestamp,
 				},
 				playerDbType
@@ -119,6 +121,7 @@ const DB = class {
 					pl.rank_standard,
 					pl.total_participation,
 					pl.current_streak,
+					pl.best_daily_streak,
 					st.has_played_today,
 					st.full_streaker,
 					st.is_streaking,

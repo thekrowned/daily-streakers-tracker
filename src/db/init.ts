@@ -14,6 +14,7 @@ await storageConn.run(`
 	rank_standard       INTEGER,
 	total_participation INTEGER,
 	current_streak      INTEGER,
+	best_daily_streak		INTEGER,
 	last_update         TIMESTAMPTZ
 	)`);
 

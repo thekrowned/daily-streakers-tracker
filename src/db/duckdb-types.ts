@@ -8,6 +8,7 @@ const playerDbType = {
 	name: VARCHAR,
 	rank_standard: INTEGER,
 	current_streak: INTEGER,
+	best_daily_streak: INTEGER,
 	total_participation: INTEGER,
 	last_update: TIMESTAMPTZ,
 };

@@ -3,6 +3,7 @@ type playerType = {
 	name: string;
 	rank_standard: number;
 	total_participation: number;
+	best_daily_streak: number;
 	current_streak: number;
 };
 
