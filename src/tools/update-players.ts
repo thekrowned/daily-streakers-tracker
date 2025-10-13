@@ -1,4 +1,3 @@
-// Yeah, it's all setTimeout sorry
 import path from "path";
 import { readJson } from "../utils/read-json.js";
 import { OsuAPI } from "../osu-api.js";
@@ -13,7 +12,7 @@ const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 async function updatePlayersInfo() {
 	try {
 		const playerNames = await readJson(
-			path.join(path.resolve(), "src", "tracked-players.json")
+			path.join(path.resolve(), "tracked-players.json")
 		);
 
 		if (!Array.isArray(playerNames)) {
