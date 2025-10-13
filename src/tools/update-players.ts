@@ -2,8 +2,11 @@ import path from "path";
 import { readJson } from "../utils/read-json.js";
 import { OsuAPI } from "../osu-api.js";
 import { assertString } from "../utils/assert.js";
-import { DB } from "../db/query.js";
+// import { DB } from "../db/query.js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
+import { db } from "../database/db.js";
+import { players, daily_tracker } from "../database/schema.js";
+import { eq } from "drizzle-orm";
 
 const consolePref = new ConsolePrefixed("[updatePlayersInfo]");
 
@@ -59,13 +62,18 @@ async function updatePlayersInfo() {
 				best_daily_streak: user.daily_challenge_user_stats.daily_streak_best,
 			};
 
-			const dbExistingPlayer = await DB.players.getById(user.id);
-			const existingPlayer = await dbExistingPlayer.getRowObjectsJson();
+			const existingPlayer = await db
+				.select()
+				.from(players)
+				.where(eq(players.osu_id, user.id));
 
 			if (existingPlayer.length != 0) {
-				await DB.players.update(playerInsertData);
+				await db
+					.update(players)
+					.set(playerInsertData)
+					.where(eq(players.osu_id, user.id));
 			} else {
-				await DB.players.add(playerInsertData);
+				await db.insert(players).values(playerInsertData);
 			}
 
 			const millisecondsSinceBeginning =
@@ -88,13 +96,18 @@ async function updatePlayersInfo() {
 						: false,
 			};
 
-			const dbExistingStreak = await DB.streaker_tracker.getById(user.id);
-			const existingStreak = await dbExistingStreak.getRowObjectsJson();
+			const existingStreak = await db
+				.select()
+				.from(daily_tracker)
+				.where(eq(daily_tracker.osu_id, user.id));
 
 			if (existingStreak.length != 0) {
-				await DB.streaker_tracker.update(streakerInsertData);
+				await db
+					.update(daily_tracker)
+					.set(streakerInsertData)
+					.where(eq(daily_tracker.osu_id, user.id));
 			} else {
-				await DB.streaker_tracker.add(streakerInsertData);
+				await db.insert(daily_tracker).values(streakerInsertData);
 			}
 		}
 	} catch (error) {

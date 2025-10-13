@@ -4,10 +4,13 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
 import { updatePlayersInfo } from "./tools/update-players.js";
-import { DB } from "./db/query.js";
+// import { DB } from "./db/query.js";
 import { TimerManager } from "./utils/timer-manager.js";
 import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 import { UtcAlarmManager } from "./utils/alarm.js";
+import { db } from "./database/db.js";
+import { players, daily_tracker } from "./database/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -35,10 +38,22 @@ app.get("/api/my-rank", async (c) => {
 });
 
 app.get("/api/daily-streakers", async (c) => {
-	const dbData = await DB.players_streaker.getAll();
-	const players = await dbData.getRowObjectsJson();
+	const data = await db
+		.select({
+			osu_id: players.osu_id,
+			name: players.name,
+			total_participation: players.total_participation,
+			current_streak: players.current_daily_streak,
+			best_daily_streak: players.best_daily_streak,
+			has_played_today: daily_tracker.has_played_today,
+			full_streaker: daily_tracker.full_streaker,
+			is_streaking: daily_tracker.is_streaking,
+			last_update: sql`concat(${daily_tracker.last_update},'+00')`,
+		})
+		.from(players)
+		.leftJoin(daily_tracker, eq(daily_tracker.osu_id, players.osu_id));
 
-	return c.json(players);
+	return c.json(data);
 });
 
 serve(
