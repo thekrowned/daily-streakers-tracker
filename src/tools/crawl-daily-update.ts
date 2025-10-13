@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 // import { DB } from "../db/query.js";
 import { db } from "../database/db.js";
 import { players, daily_tracker } from "../database/schema.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 const consolePref = new ConsolePrefixed("[crawlAndUpdateDailyPlayers]");
 
@@ -125,6 +125,7 @@ async function crawlAndUpdateDailyPlayers() {
 					full_streaker: existingPlayer.full_streaker,
 					has_played_today: true,
 					is_streaking: existingPlayer.is_streaking ? true : false,
+					last_update: sql`(current_timestamp)`,
 				})
 				.where(eq(daily_tracker.osu_id, player.id));
 		}

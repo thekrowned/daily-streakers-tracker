@@ -6,7 +6,7 @@ import { assertString } from "../utils/assert.js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
 import { players, daily_tracker } from "../database/schema.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 const consolePref = new ConsolePrefixed("[updatePlayersInfo]");
 
@@ -65,15 +65,30 @@ async function updatePlayersInfo() {
 			const existingPlayer = await db
 				.select()
 				.from(players)
-				.where(eq(players.osu_id, user.id));
+				.where(eq(players.osu_id, playerInsertData.id));
 
 			if (existingPlayer.length != 0) {
 				await db
 					.update(players)
-					.set(playerInsertData)
-					.where(eq(players.osu_id, user.id));
+					.set({
+						name: playerInsertData.name,
+						rank_standard: playerInsertData.rank_standard,
+						best_daily_streak: playerInsertData.best_daily_streak,
+						current_daily_streak: playerInsertData.current_streak,
+						total_participation: playerInsertData.total_participation,
+						last_update: sql`(current_timestamp)`,
+					})
+					.where(eq(players.osu_id, playerInsertData.id));
 			} else {
-				await db.insert(players).values(playerInsertData);
+				await db.insert(players).values({
+					osu_id: playerInsertData.id,
+					name: playerInsertData.name,
+					rank_standard: playerInsertData.rank_standard,
+					best_daily_streak: playerInsertData.best_daily_streak,
+					current_daily_streak: playerInsertData.current_streak,
+					total_participation: playerInsertData.total_participation,
+					last_update: sql`(current_timestamp)`,
+				});
 			}
 
 			const millisecondsSinceBeginning =
@@ -99,15 +114,26 @@ async function updatePlayersInfo() {
 			const existingStreak = await db
 				.select()
 				.from(daily_tracker)
-				.where(eq(daily_tracker.osu_id, user.id));
+				.where(eq(daily_tracker.osu_id, streakerInsertData.id));
 
 			if (existingStreak.length != 0) {
 				await db
 					.update(daily_tracker)
-					.set(streakerInsertData)
-					.where(eq(daily_tracker.osu_id, user.id));
+					.set({
+						full_streaker: streakerInsertData.full_streaker,
+						has_played_today: streakerInsertData.has_played_today,
+						is_streaking: streakerInsertData.is_streaking,
+						last_update: sql`(current_timestamp)`,
+					})
+					.where(eq(daily_tracker.osu_id, streakerInsertData.id));
 			} else {
-				await db.insert(daily_tracker).values(streakerInsertData);
+				await db.insert(daily_tracker).values({
+					full_streaker: streakerInsertData.full_streaker,
+					has_played_today: streakerInsertData.has_played_today,
+					is_streaking: streakerInsertData.is_streaking,
+					osu_id: streakerInsertData.id,
+					last_update: sql`(current_timestamp)`,
+				});
 			}
 		}
 	} catch (error) {
