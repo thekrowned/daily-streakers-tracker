@@ -4,9 +4,9 @@
   "scripts": {
     "dev": "tsx --env-file=.env --watch src/index.ts",
     "build": "tsc",
-    "start": "node --env-file=.env dist/index.js",
-    "db:init": "node --env-file=.env dist/db/init.js",
-    "db:migrate": "node --env-file=.env dist/db/migrate.js"
+    "start": "node --env-file=.env dist/src/index.js",
+    "db:generate": "npx --env-file=.env drizzle-kit generate --config ./drizzle.config.ts",
+    "db:migrate": "npx --env-file=.env drizzle-kit migrate --config ./drizzle.config.ts"
   },
   "dependencies": {
     "@duckdb/node-api": "^1.4.0-r.1",
