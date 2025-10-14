@@ -1,5 +1,8 @@
 import puppeteer from "puppeteer";
-import { DB } from "../db/query.js";
+// import { DB } from "../db/query.js";
+import { db } from "../database/db.js";
+import { players, daily_tracker } from "../database/schema.js";
+import { eq, sql } from "drizzle-orm";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 const consolePref = new ConsolePrefixed("[crawlAndUpdateDailyPlayers]");
 
@@ -109,17 +112,22 @@ async function crawlAndUpdateDailyPlayers() {
 
 	for (let i = 0; i < allDailyPlayers.length; i++) {
 		const player = allDailyPlayers[i];
-		const dbExisting = await DB.streaker_tracker.getById(player.id);
-		const existing = await dbExisting.getRowObjectsJson();
+		const existing = await db
+			.select()
+			.from(daily_tracker)
+			.where(eq(daily_tracker.osu_id, player.id));
 
 		if (existing.length == 1) {
 			const existingPlayer = existing[0];
-			await DB.streaker_tracker.update({
-				id: player.id,
-				full_streaker: existingPlayer.full_streaker ? true : false,
-				has_played_today: true,
-				is_streaking: existingPlayer.is_streaking ? true : false,
-			});
+			await db
+				.update(daily_tracker)
+				.set({
+					full_streaker: existingPlayer.full_streaker,
+					has_played_today: true,
+					is_streaking: existingPlayer.is_streaking ? true : false,
+					last_update: sql`(current_timestamp)`,
+				})
+				.where(eq(daily_tracker.osu_id, player.id));
 		}
 	}
 }

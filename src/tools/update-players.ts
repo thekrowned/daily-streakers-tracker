@@ -2,8 +2,11 @@ import path from "path";
 import { readJson } from "../utils/read-json.js";
 import { OsuAPI } from "../osu-api.js";
 import { assertString } from "../utils/assert.js";
-import { DB } from "../db/query.js";
+// import { DB } from "../db/query.js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
+import { db } from "../database/db.js";
+import { players, daily_tracker } from "../database/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 const consolePref = new ConsolePrefixed("[updatePlayersInfo]");
 
@@ -59,13 +62,33 @@ async function updatePlayersInfo() {
 				best_daily_streak: user.daily_challenge_user_stats.daily_streak_best,
 			};
 
-			const dbExistingPlayer = await DB.players.getById(user.id);
-			const existingPlayer = await dbExistingPlayer.getRowObjectsJson();
+			const existingPlayer = await db
+				.select()
+				.from(players)
+				.where(eq(players.osu_id, playerInsertData.id));
 
 			if (existingPlayer.length != 0) {
-				await DB.players.update(playerInsertData);
+				await db
+					.update(players)
+					.set({
+						name: playerInsertData.name,
+						rank_standard: playerInsertData.rank_standard,
+						best_daily_streak: playerInsertData.best_daily_streak,
+						current_daily_streak: playerInsertData.current_streak,
+						total_participation: playerInsertData.total_participation,
+						last_update: sql`(current_timestamp)`,
+					})
+					.where(eq(players.osu_id, playerInsertData.id));
 			} else {
-				await DB.players.add(playerInsertData);
+				await db.insert(players).values({
+					osu_id: playerInsertData.id,
+					name: playerInsertData.name,
+					rank_standard: playerInsertData.rank_standard,
+					best_daily_streak: playerInsertData.best_daily_streak,
+					current_daily_streak: playerInsertData.current_streak,
+					total_participation: playerInsertData.total_participation,
+					last_update: sql`(current_timestamp)`,
+				});
 			}
 
 			const millisecondsSinceBeginning =
@@ -88,13 +111,29 @@ async function updatePlayersInfo() {
 						: false,
 			};
 
-			const dbExistingStreak = await DB.streaker_tracker.getById(user.id);
-			const existingStreak = await dbExistingStreak.getRowObjectsJson();
+			const existingStreak = await db
+				.select()
+				.from(daily_tracker)
+				.where(eq(daily_tracker.osu_id, streakerInsertData.id));
 
 			if (existingStreak.length != 0) {
-				await DB.streaker_tracker.update(streakerInsertData);
+				await db
+					.update(daily_tracker)
+					.set({
+						full_streaker: streakerInsertData.full_streaker,
+						has_played_today: streakerInsertData.has_played_today,
+						is_streaking: streakerInsertData.is_streaking,
+						last_update: sql`(current_timestamp)`,
+					})
+					.where(eq(daily_tracker.osu_id, streakerInsertData.id));
 			} else {
-				await DB.streaker_tracker.add(streakerInsertData);
+				await db.insert(daily_tracker).values({
+					full_streaker: streakerInsertData.full_streaker,
+					has_played_today: streakerInsertData.has_played_today,
+					is_streaking: streakerInsertData.is_streaking,
+					osu_id: streakerInsertData.id,
+					last_update: sql`(current_timestamp)`,
+				});
 			}
 		}
 	} catch (error) {

@@ -4,19 +4,23 @@
   "scripts": {
     "dev": "tsx --env-file=.env --watch src/index.ts",
     "build": "tsc",
-    "start": "node --env-file=.env dist/index.js",
-    "db:init": "node --env-file=.env dist/db/init.js",
-    "db:migrate": "node --env-file=.env dist/db/migrate.js"
+    "start": "node --env-file=.env dist/src/index.js",
+    "db:generate": "npx --env-file=.env drizzle-kit generate --config ./drizzle.config.ts",
+    "db:migrate": "npx --env-file=.env drizzle-kit migrate --config ./drizzle.config.ts"
   },
   "dependencies": {
     "@duckdb/node-api": "^1.4.0-r.1",
     "@hono/node-server": "^1.19.3",
+    "better-sqlite3": "^12.4.1",
+    "drizzle-orm": "^0.44.6",
     "hono": "^4.9.7",
     "osu-api-v2-js": "^2.1.1",
     "puppeteer": "^24.22.3"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.31.5",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"
   }
