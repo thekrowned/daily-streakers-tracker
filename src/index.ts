@@ -42,6 +42,7 @@ app.get("/api/daily-streakers", async (c) => {
 		.select({
 			osu_id: players.osu_id,
 			name: players.name,
+			rank_standard: players.rank_standard,
 			total_participation: players.total_participation,
 			current_streak: players.current_daily_streak,
 			best_daily_streak: players.best_daily_streak,
