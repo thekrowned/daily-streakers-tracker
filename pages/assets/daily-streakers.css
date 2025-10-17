@@ -19,6 +19,8 @@
 	--streakers-item-text: hsl(0, 0%, 0%);
 	--streakers-item-outline-played: hsl(89, 100%, 20%);
 	--streakers-item-link-hover: hsl(0, 0%, 80%);
+
+	--inverted-when-dark: 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,6 +40,8 @@
 		--streakers-item-text: hsl(0, 0%, 100%);
 		--streakers-item-outline-played: hsl(89, 100%, 70%);
 		--streakers-item-link-hover: hsl(0, 0%, 0%);
+
+		--inverted-when-dark: 1;
 	}
 	* {
 		color-scheme: dark;
@@ -152,6 +156,7 @@ main {
 	height: 100%;
 	width: 100%;
 	object-fit: contain;
+	filter: invert(var(--inverted-when-dark));
 }
 
 @media (max-width: 576px) {
