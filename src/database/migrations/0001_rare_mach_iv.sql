@@ -1,0 +1,1 @@
+ALTER TABLE `daily_tracker` ADD `previous_daily_streak` integer;

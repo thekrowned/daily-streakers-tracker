@@ -21,6 +21,7 @@ export const daily_tracker = sqliteTable("daily_tracker", {
 		.references(() => players.osu_id),
 	has_played_today: int({ mode: "boolean" }),
 	full_streaker: int({ mode: "boolean" }),
+	previous_daily_streak: int(),
 	is_streaking: int({ mode: "boolean" }),
 	last_update: text()
 		.notNull()
