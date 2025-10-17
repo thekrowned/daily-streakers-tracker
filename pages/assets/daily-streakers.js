@@ -10,13 +10,7 @@ const sorterSelect = /** @type {HTMLSelectElement} */ (
 );
 const spanInfo = document.getElementById("info");
 
-function createStreakersItem(
-	playerName,
-	osuId,
-	hasPlayedToday,
-	currentStreak,
-	previousStreak
-) {
+function createStreakersItem(playerName, osuId, hasPlayedToday, tierIndex) {
 	const li = document.createElement("li");
 	li.classList.add("streakers-list__item");
 
@@ -28,11 +22,25 @@ function createStreakersItem(
 
 	li.appendChild(link);
 
-	if (typeof currentStreak == "number" && typeof previousStreak == "number") {
+	if (typeof tierIndex == "number") {
 		let arrowSrc = null;
 		let alt = null;
 
-		// arrowSrc = "./assets/arrow-up.png";
+		switch (tierIndex) {
+			case -2:
+				arrowSrc = "./assets/arrow-down-double.png";
+				alt = "This player is no longer a full streaker.";
+				break;
+			case -1:
+				arrowSrc = "./assets/arrow-down.png";
+				alt = "This player is no longer a casual streaker.";
+				break;
+			case 1:
+				arrowSrc = "./assets/arrow-up.png";
+				alt = "This player has just became a casual streaker.";
+			default:
+				break;
+		}
 
 		if (arrowSrc) {
 			const tierStatus = document.createElement("div");
@@ -86,7 +94,8 @@ async function renderStreakersItem(streakers) {
 		const playerElement = createStreakersItem(
 			player.name,
 			player.osu_id,
-			player.has_played_today
+			player.has_played_today,
+			player.tier_change
 		);
 		if (player.full_streaker) {
 			fullStreakersList.appendChild(playerElement);
