@@ -10,7 +10,13 @@ const sorterSelect = /** @type {HTMLSelectElement} */ (
 );
 const spanInfo = document.getElementById("info");
 
-function createStreakersItem(playerName, osuId, hasPlayedToday) {
+function createStreakersItem(
+	playerName,
+	osuId,
+	hasPlayedToday,
+	currentStreak,
+	previousStreak
+) {
 	const li = document.createElement("li");
 	li.classList.add("streakers-list__item");
 
@@ -21,6 +27,27 @@ function createStreakersItem(playerName, osuId, hasPlayedToday) {
 	link.href = `https://osu.ppy.sh/users/${osuId}`;
 
 	li.appendChild(link);
+
+	if (typeof currentStreak == "number" && typeof previousStreak == "number") {
+		let arrowSrc = null;
+		let alt = null;
+
+		// arrowSrc = "./assets/arrow-up.png";
+
+		if (arrowSrc) {
+			const tierStatus = document.createElement("div");
+			tierStatus.classList.add("streakers-list__tier");
+
+			const tierImage = document.createElement("img");
+			tierImage.classList.add("streakers-list__tier-image");
+			tierImage.alt = alt;
+			tierImage.src = arrowSrc;
+
+			tierStatus.appendChild(tierImage);
+
+			li.appendChild(tierStatus);
+		}
+	}
 
 	if (hasPlayedToday) {
 		li.classList.add("streakers-list__item--played");
