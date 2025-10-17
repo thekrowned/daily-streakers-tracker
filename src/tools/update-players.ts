@@ -140,13 +140,6 @@ async function updatePlayersInfo() {
 					existingStreak[0].previous_daily_streak;
 				let previousDailyStreak = null;
 
-				consolePref.info(
-					`Current Daily Streak | Incoming API Value: ${incomingCurrentDailyStreak}, 'Cached' Value: ${storedCurrentDailyStreak}`
-				);
-				consolePref.info(
-					`Previous daily streak | 'Cached':${storedPreviousDailyStreak}`
-				);
-
 				if (incomingCurrentDailyStreak === storedCurrentDailyStreak) {
 					previousDailyStreak = storedPreviousDailyStreak;
 				} else {
@@ -160,7 +153,7 @@ async function updatePlayersInfo() {
 				}
 
 				consolePref.info(
-					`Previous daily streak | New Value:${previousDailyStreak}`
+					`Curr (${storedCurrentDailyStreak} > ${incomingCurrentDailyStreak}) | Prev (${storedPreviousDailyStreak} > ${previousDailyStreak})`
 				);
 
 				await db
