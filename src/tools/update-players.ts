@@ -1,6 +1,7 @@
 import path from "path";
 import { readJson } from "../utils/read-json.js";
 import { OsuAPI } from "../osu-api.js";
+import { User } from "osu-api-v2-js";
 import { assertString } from "../utils/assert.js";
 // import { DB } from "../db/query.js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
@@ -28,7 +29,14 @@ async function updatePlayersInfo() {
 			}
 			consolePref.info(`Inserting ${playerName}`);
 
-			const user = await OsuAPI.getUser(playerName);
+			let user: null | User.Extended = null;
+
+			try {
+				user = await OsuAPI.getUser(playerName);
+			} catch (error) {
+				consolePref.error(error);
+				continue;
+			}
 
 			const lastUpdate = user.daily_challenge_user_stats.last_update;
 			const today = new Date();
