@@ -10,7 +10,7 @@ import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 import { UtcAlarmManager } from "./utils/alarm.js";
 import { db } from "./database/db.js";
 import { players, daily_tracker } from "./database/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, not } from "drizzle-orm";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -38,12 +38,34 @@ app.get("/api/my-rank", async (c) => {
 });
 
 app.get("/api/daily-streakers", async (c) => {
+	const beginningDate = new Date("2024-07-25T00:00:00+00:00");
+	const millisecondsSinceBeginning =
+		new Date().getTime() - beginningDate.getTime();
+	const daysSinceBeginning = Math.floor(millisecondsSinceBeginning / 86400000);
+
 	const data = await db
 		.select({
 			osu_id: players.osu_id,
 			name: players.name,
 			rank_standard: players.rank_standard,
 			total_participation: players.total_participation,
+			tier_change: sql`
+				case 
+					when ( 
+						(${players.current_daily_streak}=0) and 
+						(${daysSinceBeginning}=${daily_tracker.previous_daily_streak}) and 
+						(${not(daily_tracker.full_streaker)}) 
+					) then -2
+					when (
+						(${players.current_daily_streak}=0) and 
+						(${daily_tracker.previous_daily_streak}>=2) 
+					) then -1
+					when (
+						(${daily_tracker.previous_daily_streak}<2) and
+						(${daily_tracker.is_streaking}) 
+					) then 1
+					else 0
+				end`,
 			current_streak: players.current_daily_streak,
 			best_daily_streak: players.best_daily_streak,
 			previous_daily_streak: daily_tracker.previous_daily_streak,
