@@ -46,6 +46,7 @@ app.get("/api/daily-streakers", async (c) => {
 			total_participation: players.total_participation,
 			current_streak: players.current_daily_streak,
 			best_daily_streak: players.best_daily_streak,
+			previous_daily_streak: daily_tracker.previous_daily_streak,
 			has_played_today: daily_tracker.has_played_today,
 			full_streaker: daily_tracker.full_streaker,
 			is_streaking: daily_tracker.is_streaking,
