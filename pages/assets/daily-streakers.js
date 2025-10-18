@@ -10,7 +10,7 @@ const sorterSelect = /** @type {HTMLSelectElement} */ (
 );
 const spanInfo = document.getElementById("info");
 
-function createStreakersItem(playerName, osuId, hasPlayedToday) {
+function createStreakersItem(playerName, osuId, hasPlayedToday, tierIndex) {
 	const li = document.createElement("li");
 	li.classList.add("streakers-list__item");
 
@@ -21,6 +21,41 @@ function createStreakersItem(playerName, osuId, hasPlayedToday) {
 	link.href = `https://osu.ppy.sh/users/${osuId}`;
 
 	li.appendChild(link);
+
+	if (typeof tierIndex == "number") {
+		let arrowSrc = null;
+		let alt = null;
+
+		switch (tierIndex) {
+			case -2:
+				arrowSrc = "./assets/arrow-down-double.png";
+				alt = "This player is no longer a full streaker.";
+				break;
+			case -1:
+				arrowSrc = "./assets/arrow-down.png";
+				alt = "This player is no longer a casual streaker.";
+				break;
+			case 1:
+				arrowSrc = "./assets/arrow-up.png";
+				alt = "This player has just became a casual streaker.";
+			default:
+				break;
+		}
+
+		if (arrowSrc) {
+			const tierStatus = document.createElement("div");
+			tierStatus.classList.add("streakers-list__tier");
+
+			const tierImage = document.createElement("img");
+			tierImage.classList.add("streakers-list__tier-image");
+			tierImage.alt = alt;
+			tierImage.src = arrowSrc;
+
+			tierStatus.appendChild(tierImage);
+
+			li.appendChild(tierStatus);
+		}
+	}
 
 	if (hasPlayedToday) {
 		li.classList.add("streakers-list__item--played");
@@ -59,7 +94,8 @@ async function renderStreakersItem(streakers) {
 		const playerElement = createStreakersItem(
 			player.name,
 			player.osu_id,
-			player.has_played_today
+			player.has_played_today,
+			player.tier_change
 		);
 		if (player.full_streaker) {
 			fullStreakersList.appendChild(playerElement);

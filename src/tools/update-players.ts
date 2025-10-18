@@ -105,6 +105,12 @@ async function updatePlayersInfo() {
 				millisecondsSinceBeginning / 86400000
 			);
 
+			const incomingCurrentDailyStreak = playerInsertData.current_streak;
+			const storedCurrentDailyStreak =
+				existingPlayer.length != 0
+					? existingPlayer[0].current_daily_streak
+					: null;
+
 			const streakerInsertData = {
 				id: user.id,
 				has_played_today: playedToday,
@@ -125,12 +131,38 @@ async function updatePlayersInfo() {
 				.where(eq(daily_tracker.osu_id, streakerInsertData.id));
 
 			if (existingStreak.length != 0) {
+				// Compare two daily_streak_current values
+				// one from the api, another one from db (players table)
+				// If it's the same, don't change anything
+				// Otherwise, set previous_daily_streak to the value of
+				// 		daily_streak_current from players table
+				const storedPreviousDailyStreak =
+					existingStreak[0].previous_daily_streak;
+				let previousDailyStreak = null;
+
+				if (incomingCurrentDailyStreak === storedCurrentDailyStreak) {
+					previousDailyStreak = storedPreviousDailyStreak;
+				} else {
+					consolePref.info("Setting new value");
+					previousDailyStreak = storedCurrentDailyStreak;
+				}
+
+				// If it's still null set to newest value from api
+				if (previousDailyStreak == null) {
+					previousDailyStreak = incomingCurrentDailyStreak;
+				}
+
+				consolePref.info(
+					`Curr (${storedCurrentDailyStreak} > ${incomingCurrentDailyStreak}) | Prev (${storedPreviousDailyStreak} > ${previousDailyStreak})`
+				);
+
 				await db
 					.update(daily_tracker)
 					.set({
 						full_streaker: streakerInsertData.full_streaker,
 						has_played_today: streakerInsertData.has_played_today,
 						is_streaking: streakerInsertData.is_streaking,
+						previous_daily_streak: previousDailyStreak,
 						last_update: sql`(current_timestamp)`,
 					})
 					.where(eq(daily_tracker.osu_id, streakerInsertData.id));
@@ -140,6 +172,7 @@ async function updatePlayersInfo() {
 					has_played_today: streakerInsertData.has_played_today,
 					is_streaking: streakerInsertData.is_streaking,
 					osu_id: streakerInsertData.id,
+					previous_daily_streak: incomingCurrentDailyStreak,
 					last_update: sql`(current_timestamp)`,
 				});
 			}

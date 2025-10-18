@@ -124,6 +124,7 @@ async function crawlAndUpdateDailyPlayers() {
 				.set({
 					full_streaker: existingPlayer.full_streaker,
 					has_played_today: true,
+					previous_daily_streak: existingPlayer.previous_daily_streak,
 					is_streaking: existingPlayer.is_streaking ? true : false,
 					last_update: sql`(current_timestamp)`,
 				})
