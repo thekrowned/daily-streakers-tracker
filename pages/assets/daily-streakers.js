@@ -10,7 +10,7 @@ const sorterSelect = /** @type {HTMLSelectElement} */ (
 );
 const spanInfo = document.getElementById("info");
 
-function createStreakersItem(playerName, osuId, hasPlayedToday, tierIndex) {
+function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 	const li = document.createElement("li");
 	li.classList.add("streakers-list__item");
 
@@ -91,12 +91,12 @@ async function renderStreakersItem(streakers) {
 	notStreakersList.innerHTML = "";
 
 	streakers.forEach((player) => {
-		const playerElement = createStreakersItem(
-			player.name,
-			player.osu_id,
-			player.has_played_today,
-			player.tier_change
-		);
+		const playerElement = createStreakersItem({
+			playerName: player.name,
+			osuId: player.osu_id,
+			hasPlayedToday: player.has_played_today,
+			tierIndex: player.tier_change,
+		});
 		if (player.full_streaker) {
 			fullStreakersList.appendChild(playerElement);
 		} else {
