@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-// import { DB } from "../db/query.js";
 import { db } from "../database/db.js";
 import { players, daily_tracker } from "../database/schema.js";
 import { eq, sql } from "drizzle-orm";

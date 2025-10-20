@@ -2,8 +2,6 @@ import path from "path";
 import { readJson } from "../utils/read-json.js";
 import { OsuAPI } from "../osu-api.js";
 import { User } from "osu-api-v2-js";
-import { assertString } from "../utils/assert.js";
-// import { DB } from "../db/query.js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
 import { players, daily_tracker } from "../database/schema.js";

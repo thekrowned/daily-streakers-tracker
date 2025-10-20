@@ -4,8 +4,6 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { OsuAPI } from "./osu-api.js";
 import { updatePlayersInfo } from "./tools/update-players.js";
-// import { DB } from "./db/query.js";
-import { TimerManager } from "./utils/timer-manager.js";
 import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 import { UtcAlarmManager } from "./utils/alarm.js";
 import { db } from "./database/db.js";
@@ -89,19 +87,6 @@ serve(
 		console.log(`Server is running on http://localhost:${info.port}`);
 	}
 );
-
-// TimerManager.addInterval({
-// 	name: "Player Info",
-// 	callback: updatePlayersInfo,
-// 	time: 1800_000,
-// 	executeImmediately: true,
-// });
-
-// TimerManager.addInterval({
-// 	name: "Crawler",
-// 	callback: crawlAndUpdateDailyPlayers,
-// 	time: 900_000,
-// });
 
 const updatePlayersTimes: [number, number][] = [];
 for (let i = 0; i < 23; i++) {
