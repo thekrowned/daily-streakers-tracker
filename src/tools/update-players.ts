@@ -139,7 +139,25 @@ async function updatePlayersInfo() {
 				let previousDailyStreak = null;
 
 				if (incomingCurrentDailyStreak === storedCurrentDailyStreak) {
-					previousDailyStreak = storedPreviousDailyStreak;
+					// Reset previous_daily_streak to 0
+					// If the player hasn't played after a day
+					const lastUpdateInMilliseconds = new Date(
+						existingStreak[0].last_update + "+00"
+					).getMilliseconds();
+					const lastUpdateDay = Math.floor(lastUpdateInMilliseconds) / 86400000;
+
+					if (
+						incomingCurrentDailyStreak == 0 &&
+						storedCurrentDailyStreak == 0 &&
+						daysSinceBeginning > lastUpdateDay
+					) {
+						consolePref.info(
+							`Resetting previous_daily_streak (${lastUpdateDay}/${daysSinceBeginning})`
+						);
+						previousDailyStreak = 0;
+					} else {
+						previousDailyStreak = storedPreviousDailyStreak;
+					}
 				} else {
 					consolePref.info("Setting new value");
 					previousDailyStreak = storedCurrentDailyStreak;
