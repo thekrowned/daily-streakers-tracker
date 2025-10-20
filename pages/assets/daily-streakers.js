@@ -22,10 +22,10 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 
 	li.appendChild(link);
 
-	if (typeof tierIndex == "number") {
-		let arrowSrc = null;
-		let alt = null;
+	let arrowSrc = null;
+	let alt = null;
 
+	if (typeof tierIndex == "number") {
 		switch (tierIndex) {
 			case -2:
 				arrowSrc = "./assets/arrow-down-double.png";
@@ -41,20 +41,20 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 			default:
 				break;
 		}
+	}
 
-		if (arrowSrc) {
-			const tierStatus = document.createElement("div");
-			tierStatus.classList.add("streakers-list__tier");
+	if (arrowSrc) {
+		const tierStatus = document.createElement("div");
+		tierStatus.classList.add("streakers-list__tier");
 
-			const tierImage = document.createElement("img");
-			tierImage.classList.add("streakers-list__tier-image");
-			tierImage.alt = alt;
-			tierImage.src = arrowSrc;
+		const tierImage = document.createElement("img");
+		tierImage.classList.add("streakers-list__tier-image");
+		tierImage.alt = alt;
+		tierImage.src = arrowSrc;
 
-			tierStatus.appendChild(tierImage);
+		tierStatus.appendChild(tierImage);
 
-			li.appendChild(tierStatus);
-		}
+		li.appendChild(tierStatus);
 	}
 
 	if (hasPlayedToday) {
