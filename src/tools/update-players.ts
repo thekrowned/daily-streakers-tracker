@@ -141,10 +141,10 @@ async function updatePlayersInfo() {
 				if (incomingCurrentDailyStreak === storedCurrentDailyStreak) {
 					// Reset previous_daily_streak to 0
 					// If the player hasn't played after a day
-					const lastUpdateInMilliseconds = new Date(
-						existingStreak[0].last_update + "+00"
-					).getMilliseconds();
-					const lastUpdateDay = Math.floor(lastUpdateInMilliseconds) / 86400000;
+					const lastUpdate = new Date(existingStreak[0].last_update + "+00");
+					const lastUpdateSinceBeginning =
+						lastUpdate.getTime() - beginningDate.getTime();
+					const lastUpdateDay = Math.floor(lastUpdateSinceBeginning / 86400000);
 
 					if (
 						incomingCurrentDailyStreak == 0 &&
