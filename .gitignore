@@ -15,6 +15,13 @@ node_modules/
 .env
 .env.production
 
+# data(base)
+*.db
+*.db.wal
+*.db-wal
+*.db-shm
+tracked-players.json
+
 # logs
 logs/
 *.log
@@ -26,5 +33,6 @@ lerna-debug.log*
 
 # misc
 .DS_Store
+*.bak
 
 dist/
