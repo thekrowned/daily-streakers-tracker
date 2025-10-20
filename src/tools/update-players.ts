@@ -103,6 +103,24 @@ async function updatePlayersInfo() {
 				millisecondsSinceBeginning / 86400000
 			);
 
+			const is_full_streaker: boolean = (() => {
+				if (
+					user.daily_challenge_user_stats.daily_streak_current >
+						daysSinceBeginning &&
+					playedToday
+				) {
+					return true;
+				} else if (
+					user.daily_challenge_user_stats.daily_streak_current ==
+						daysSinceBeginning &&
+					!playedToday
+				) {
+					return true;
+				} else {
+					return false;
+				}
+			})();
+
 			const incomingCurrentDailyStreak = playerInsertData.current_streak;
 			const storedCurrentDailyStreak =
 				existingPlayer.length != 0
@@ -112,11 +130,7 @@ async function updatePlayersInfo() {
 			const streakerInsertData = {
 				id: user.id,
 				has_played_today: playedToday,
-				full_streaker:
-					user.daily_challenge_user_stats.daily_streak_current >=
-					daysSinceBeginning
-						? true
-						: false,
+				full_streaker: is_full_streaker,
 				is_streaking:
 					user.daily_challenge_user_stats.daily_streak_current >= 2
 						? true
