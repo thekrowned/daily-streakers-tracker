@@ -24,20 +24,24 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 
 	let arrowSrc = null;
 	let alt = null;
+	let outlineTierClassname = null;
 
 	if (typeof tierIndex == "number") {
 		switch (tierIndex) {
 			case -2:
 				arrowSrc = "./assets/arrow-down-double.png";
 				alt = "This player is no longer a full streaker.";
+				outlineTierClassname = "streakers-list__item--fallen";
 				break;
 			case -1:
 				arrowSrc = "./assets/arrow-down.png";
 				alt = "This player is no longer a casual streaker.";
+				outlineTierClassname = "streakers-list__item--downgraded";
 				break;
 			case 1:
 				arrowSrc = "./assets/arrow-up.png";
 				alt = "This player has just became a casual streaker.";
+				outlineTierClassname = "streakers-list__item--upgraded";
 			default:
 				break;
 		}
@@ -60,6 +64,10 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 	if (hasPlayedToday) {
 		li.classList.add("streakers-list__item--played");
 		link.setAttribute("aria-description", "Played today");
+	} else {
+		if (outlineTierClassname) {
+			li.classList.add(outlineTierClassname);
+		}
 	}
 
 	return li;
