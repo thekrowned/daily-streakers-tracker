@@ -51,7 +51,7 @@ app.get("/api/daily-streakers", async (c) => {
 				case 
 					when ( 
 						(${players.current_daily_streak}=0) and 
-						(${daysSinceBeginning}=${daily_tracker.previous_daily_streak}) and 
+						(${daysSinceBeginning - 1}=${daily_tracker.previous_daily_streak}) and 
 						(${not(daily_tracker.full_streaker)}) 
 					) then -2
 					when (
