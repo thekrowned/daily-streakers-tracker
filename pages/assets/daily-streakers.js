@@ -28,15 +28,19 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 
 	if (typeof tierIndex == "number") {
 		switch (tierIndex) {
-			case -2:
+			case -3:
 				arrowSrc = "./assets/arrow-down-double.png";
 				alt = "This player is no longer a full streaker.";
 				outlineTierClassname = "streakers-list__item--fallen";
 				break;
+			case -2:
+				arrowSrc = "./assets/arrow-down-double.png";
+				alt = "This player has just lost their streak significantly.";
+				outlineTierClassname = "streakers-list__item--downgraded";
+				break;
 			case -1:
 				arrowSrc = "./assets/arrow-down.png";
 				alt = "This player is no longer a casual streaker.";
-				outlineTierClassname = "streakers-list__item--downgraded";
 				break;
 			case 1:
 				arrowSrc = "./assets/arrow-up.png";
