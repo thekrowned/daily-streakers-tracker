@@ -20,6 +20,7 @@ node_modules/
 *.db.wal
 *.db-wal
 *.db-shm
+*.db-journal
 tracked-players.json
 
 # logs
