@@ -93,7 +93,7 @@ serve(
 );
 
 const updatePlayersTimes: [number, number][] = [];
-for (let i = 0; i < 23; i++) {
+for (let i = 0; i <= 23; i++) {
 	updatePlayersTimes.push([i, 1]);
 	updatePlayersTimes.push([i, 35]);
 }
@@ -108,9 +108,7 @@ UtcAlarmManager.add({
 	name: "Crawler",
 	callback: crawlAndUpdateDailyPlayers,
 	time: [
-		[23, 0],
 		[23, 15],
-		[23, 30],
 		[23, 45],
 	],
 });
