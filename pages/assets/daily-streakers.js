@@ -167,6 +167,14 @@ async function sortStreakers(streakers, mode) {
 				(a, b) => b.best_daily_streak - a.best_daily_streak
 			);
 			break;
+		case "not_played":
+			streakersSorted = streakers.toSorted((a, b) =>
+				nameSortValue(a.name, b.name)
+			);
+			streakersSorted = streakersSorted.toSorted(
+				(a, b) => a.has_played_today - b.has_played_today
+			);
+			break;
 		default:
 			break;
 	}
