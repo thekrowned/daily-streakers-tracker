@@ -197,8 +197,14 @@ async function main() {
 		}
 	}
 	sorterSelect.value = sortBy;
-	streakersData = await sortStreakers(streakers, sortBy);
-	renderStreakersItem(streakersData);
+	try {
+		streakersData = await sortStreakers(streakers, sortBy);
+		renderStreakersItem(streakersData);
+	} catch (error) {
+		// Fallback to unsorted items if sorting fails
+		streakersData = streakers;
+		renderStreakersItem(streakersData);
+	}
 	// Generate last update information based on the last-est last update
 	const lastUpdates = streakersData.map((players) => {
 		const dateString = players.last_update;
