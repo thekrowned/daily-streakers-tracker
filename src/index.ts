@@ -93,7 +93,9 @@ serve(
 );
 
 const updatePlayersTimes: [number, number][] = [];
-for (let i = 0; i <= 23; i++) {
+updatePlayersTimes.push([0, 10]);
+updatePlayersTimes.push([0, 40]);
+for (let i = 1; i <= 23; i++) {
 	updatePlayersTimes.push([i, 1]);
 	updatePlayersTimes.push([i, 35]);
 }
