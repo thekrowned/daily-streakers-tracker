@@ -45,7 +45,7 @@ async function checkApiValidity() {
 		const expiryDate = internalOsuAPI.expires;
 		consolePref.info(`Checking api validity...`);
 		consolePref.info(`Expiry date: ${expiryDate}`);
-		if (expiryDate.getDate() - now.getDate() <= 4000_000) {
+		if (expiryDate.getTime() - now.getTime() <= 4000_000) {
 			regenerateAPI();
 		}
 	} catch (error) {
