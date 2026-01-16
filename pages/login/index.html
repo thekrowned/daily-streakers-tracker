@@ -16,18 +16,35 @@
 	</body>
 	<script>
 		const form = document.getElementById("form");
-		form.addEventListener("submit", (e) => {
+
+		form.addEventListener("submit", async (e) => {
 			e.preventDefault();
 			const data = new FormData(form);
 
-			fetch("../api/auth", {
-				method: "POST",
-				body: JSON.stringify({
-					username: data.get("username"),
-					password: data.get("password"),
-				}),
-				headers: { "Content-Type": "application/json" },
-			}).then((res) => console.log(res));
+			try {
+				const loginResponse = await fetch("../api/auth", {
+					method: "POST",
+					body: JSON.stringify({
+						username: data.get("username"),
+						password: data.get("password"),
+					}),
+					headers: { "Content-Type": "application/json" },
+				});
+
+				if (loginResponse.status == 200) {
+					const loginData = await loginResponse.json();
+
+					if (loginData?.success) {
+						window.location.assign("../manage/");
+					} else {
+						const message = loginData?.message ?? "Unknown error from server.";
+						throw new Error(message);
+					}
+				}
+			} catch (error) {
+				console.error(error);
+				alert(`${error?.message || "Something unexpected happened."}`);
+			}
 		});
 	</script>
 </html>
