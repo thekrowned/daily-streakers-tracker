@@ -45,11 +45,33 @@ app.get("/manage", (c) => {
 app.use("/manage/", async (c, next) => {
 	try {
 		const cookie = getCookie(c);
-		console.log(cookie);
+		const clientUuid = cookie?.uuid;
+
+		if (!clientUuid) {
+			return c.redirect("/login/");
+		}
+
+		const existingUuid = await db
+			.select()
+			.from(admin_session)
+			.where(eq(admin_session.id, clientUuid));
+
+		if (existingUuid.length < 1) {
+			return c.redirect("/login/");
+		}
+
+		const currentTime = new Date();
+
+		if (currentTime.getTime() >= existingUuid[0].expires.getTime()) {
+			return c.redirect("/login/");
+		}
+
+		await next();
 	} catch (error) {
 		console.error(error);
+		c.status(500);
+		return c.text("Internal Server Error");
 	}
-	await next();
 });
 
 app.get(
