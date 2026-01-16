@@ -2,6 +2,16 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { trimTrailingSlash } from "hono/trailing-slash";
+import {
+	deleteCookie,
+	getCookie,
+	getSignedCookie,
+	setCookie,
+	setSignedCookie,
+	generateCookie,
+	generateSignedCookie,
+} from "hono/cookie";
+
 import { OsuAPI } from "./osu-api.js";
 import { updatePlayersInfo } from "./tools/update-players.js";
 import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
@@ -9,15 +19,37 @@ import { UtcAlarmManager } from "./utils/alarm.js";
 import { db } from "./database/db.js";
 import { players, daily_tracker } from "./database/schema.js";
 import { eq, sql, not } from "drizzle-orm";
+import { assertString } from "./utils/assert.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
 	throw new Error("Please enter server port correctly!");
 }
 
+const ADMIN_USERNAME = assertString(process.env.ADMIN_USERNAME);
+const ADMIN_PASSWORD = assertString(process.env.ADMIN_PASSWORD);
+
 const app = new Hono();
 
 app.use("*", trimTrailingSlash());
+
+app.get("/login", (c) => {
+	return c.redirect("/login/");
+});
+
+app.get("/manage", (c) => {
+	return c.redirect("/manage/");
+});
+
+app.use("/manage/", async (c, next) => {
+	try {
+		const cookie = getCookie(c);
+		console.log(cookie);
+	} catch (error) {
+		console.error(error);
+	}
+	await next();
+});
 
 app.get(
 	"/*",
@@ -28,6 +60,18 @@ app.get(
 
 app.get("/api", (c) => {
 	return c.text("Nope, not here.");
+});
+
+app.post("/api/auth", async (c) => {
+	try {
+		const data = await c.req.json();
+		console.log(data);
+		return c.text("Login information submitted.");
+	} catch (error) {
+		console.error(error);
+		c.status(500);
+		return c.text("Internal Server Error");
+	}
 });
 
 app.get("/api/my-rank", async (c) => {
