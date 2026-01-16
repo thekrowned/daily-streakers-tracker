@@ -99,14 +99,14 @@ app.post("/api/auth", async (c) => {
 			`uuid=${uuid}; Max-Age=${maxAge}; path=/; SameSite=Strict; Secure; HttpOnly`
 		);
 		return c.json({
-			error: false,
+			success: true,
 			message: "Successful login",
 		});
 	} catch (error) {
 		console.error(error);
 		c.status(500);
 		return c.json({
-			error: true,
+			success: false,
 			message: "Internal Server Error",
 		});
 	}
