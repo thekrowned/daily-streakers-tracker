@@ -20,6 +20,7 @@ import { db } from "./database/db.js";
 import { players, daily_tracker } from "./database/schema.js";
 import { eq, sql, not } from "drizzle-orm";
 import { assertString } from "./utils/assert.js";
+import { admin_session } from "./database/schema.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -65,12 +66,47 @@ app.get("/api", (c) => {
 app.post("/api/auth", async (c) => {
 	try {
 		const data = await c.req.json();
-		console.log(data);
-		return c.text("Login information submitted.");
+
+		const signInValidity =
+			data?.username == ADMIN_USERNAME && data?.password == ADMIN_PASSWORD;
+
+		if (!signInValidity) {
+			c.status(401);
+			return c.json({
+				error: true,
+				message: "Invalid username and/or password",
+			});
+		}
+
+		const uuid = crypto.randomUUID();
+		const currentTime = new Date();
+		const expiryTime = new Date(currentTime.getTime() + 30 * 60 * 1000);
+
+		const dbSession = await db.insert(admin_session).values({
+			id: uuid,
+			expires: expiryTime,
+			created: currentTime,
+		});
+
+		if (dbSession.changes < 1) {
+			throw new Error("Failed to insert uuid to database");
+		}
+
+		c.status(200);
+		return c.json({
+			error: false,
+			message: "Successful login",
+			data: {
+				uuid: uuid,
+			},
+		});
 	} catch (error) {
 		console.error(error);
 		c.status(500);
-		return c.text("Internal Server Error");
+		return c.json({
+			error: true,
+			message: "Internal Server Error",
+		});
 	}
 });
 
