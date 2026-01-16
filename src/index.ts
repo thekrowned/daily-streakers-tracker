@@ -80,7 +80,8 @@ app.post("/api/auth", async (c) => {
 
 		const uuid = crypto.randomUUID();
 		const currentTime = new Date();
-		const expiryTime = new Date(currentTime.getTime() + 30 * 60 * 1000);
+		const maxAge = 30 * 60;
+		const expiryTime = new Date(currentTime.getTime() + maxAge * 1000);
 
 		const dbSession = await db.insert(admin_session).values({
 			id: uuid,
@@ -93,12 +94,13 @@ app.post("/api/auth", async (c) => {
 		}
 
 		c.status(200);
+		c.header(
+			"Set-Cookie",
+			`uuid=${uuid}; Max-Age=${maxAge}; path=/; SameSite=Strict; Secure; HttpOnly`
+		);
 		return c.json({
 			error: false,
 			message: "Successful login",
-			data: {
-				uuid: uuid,
-			},
 		});
 	} catch (error) {
 		console.error(error);
