@@ -15,6 +15,13 @@
       "when": 1760671582862,
       "tag": "0001_rare_mach_iv",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1768528953052,
+      "tag": "0002_brave_the_liberteens",
+      "breakpoints": true
     }
   ]
 }

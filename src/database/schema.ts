@@ -27,3 +27,9 @@ export const daily_tracker = sqliteTable("daily_tracker", {
 		.notNull()
 		.default(sql`(current_timestamp)`),
 });
+
+export const admin_session = sqliteTable("admin_session", {
+	id: text().notNull(),
+	expires: int({ mode: "timestamp_ms" }).notNull(),
+	created: int({ mode: "timestamp_ms" }).notNull(),
+});
