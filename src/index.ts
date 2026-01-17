@@ -35,11 +35,11 @@ const app = new Hono();
 app.use("*", trimTrailingSlash());
 
 app.get("/login", (c) => {
-	return c.redirect("/login/");
+	return c.redirect("./login/");
 });
 
 app.get("/manage", (c) => {
-	return c.redirect("/manage/");
+	return c.redirect("./manage/");
 });
 
 app.use("/manage/", async (c, next) => {
@@ -48,7 +48,7 @@ app.use("/manage/", async (c, next) => {
 		const clientUuid = cookie?.uuid;
 
 		if (!clientUuid) {
-			return c.redirect("/login/");
+			return c.redirect("../login/");
 		}
 
 		const existingUuid = await db
@@ -57,13 +57,13 @@ app.use("/manage/", async (c, next) => {
 			.where(eq(admin_session.id, clientUuid));
 
 		if (existingUuid.length < 1) {
-			return c.redirect("/login/");
+			return c.redirect("../login/");
 		}
 
 		const currentTime = new Date();
 
 		if (currentTime.getTime() >= existingUuid[0].expires.getTime()) {
-			return c.redirect("/login/");
+			return c.redirect("../login/");
 		}
 
 		await next();
