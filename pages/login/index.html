@@ -4,15 +4,46 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Login</title>
+		<link rel="stylesheet" href="../assets/global.css?v=20260117" />
+		<link rel="stylesheet" href="./login.css?v=20260117" />
 	</head>
 	<body>
-		<form id="form">
-			<label for="username">username</label>
-			<input type="text" name="username" required />
-			<label for="password">password</label>
-			<input type="password" name="password" required />
-			<button type="submit">Login now</button>
-		</form>
+		<header class="header">
+			<h1 class="header__title">Daily Streakers Tracker</h1>
+		</header>
+		<main>
+			<noscript>Please enable JavaScript</noscript>
+			<div class="login-container">
+				<div class="card">
+					<div class="card__title">Administrator Login</div>
+					<form class="login-form" id="form">
+						<div class="login-form__group">
+							<label class="login-form__label" for="username">Username</label>
+							<input
+								class="login-form__input text-input-field"
+								type="text"
+								name="username"
+								id="username"
+								required
+							/>
+						</div>
+						<div class="login-form__group">
+							<label class="login-form__label" for="password">Password</label>
+							<input
+								class="login-form__input text-input-field"
+								type="password"
+								name="password"
+								id="password"
+								required
+							/>
+						</div>
+						<button class="login-form__button button-primary" type="submit">
+							Login
+						</button>
+					</form>
+				</div>
+			</div>
+		</main>
 	</body>
 	<script>
 		const form = document.getElementById("form");

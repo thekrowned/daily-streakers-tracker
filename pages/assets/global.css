@@ -15,6 +15,16 @@
 	--card-foreground: hsl(0, 0%, 0%);
 	--card-shadow: hsla(0, 0%, 0%, 10%);
 
+	--button-primary-background: hsl(297, 50%, 35%);
+	--button-primary-background-hover: hsl(297, 50%, 45%);
+	--button-primary-background-pressed: hsl(297, 50%, 20%);
+	--button-primary-foreground: hsl(0, 0%, 100%);
+	--button-primary-shadow: hsla(0, 0%, 0%, 30%);
+
+	--text-input-field-background: hsl(0, 0%, 100%);
+	--text-input-field-foreground: hsl(0, 0%, 0%);
+	--text-input-field-border: hsl(0, 0%, 70%);
+
 	--inverted-when-dark: 0;
 	--inverted-when-light: 1;
 }
@@ -31,6 +41,16 @@
 		--card-background: hsl(0, 0%, 25%);
 		--card-foreground: hsl(0, 0%, 100%);
 		--card-shadow: hsla(0, 0%, 0%, 10%);
+
+		--button-primary-background: hsl(297, 50%, 35%);
+		--button-primary-background-hover: hsl(297, 50%, 45%);
+		--button-primary-background-pressed: hsl(297, 50%, 20%);
+		--button-primary-foreground: hsl(0, 0%, 100%);
+		--button-primary-shadow: hsla(0, 0%, 0%, 10%);
+
+		--text-input-field-background: hsl(0, 0%, 10%);
+		--text-input-field-foreground: hsl(0, 0%, 100%);
+		--text-input-field-border: hsl(0, 0%, 50%);
 
 		--inverted-when-dark: 1;
 		--inverted-when-light: 0;
@@ -88,4 +108,47 @@ main {
 
 .card__description {
 	font-size: 1rem;
+}
+
+.button-primary {
+	transition: linear 0.1s;
+	background-color: var(--button-primary-background);
+	color: var(--button-primary-foreground);
+	border: none;
+	height: 1.8rem;
+	cursor: pointer;
+	border-radius: 0.1rem;
+	font-weight: 700;
+	box-shadow: 0rem 0.1rem 0.2rem var(--button-primary-shadow),
+		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
+		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
+}
+
+.button-primary:hover {
+	transition: linear 0.1s;
+	background-color: var(--button-primary-background-hover);
+	color: var(--button-primary-foreground);
+	box-shadow: 0rem 0.1rem 0.4rem var(--button-primary-shadow),
+		0.1rem 0.1rem 0.4rem var(--button-primary-shadow),
+		-0.1rem 0.1rem 0.4rem var(--button-primary-shadow);
+}
+
+.button-primary:active {
+	transition: linear 0.1s;
+	background-color: var(--button-primary-background-pressed);
+	color: var(--button-primary-foreground);
+	box-shadow: 0rem 0.1rem 0.2rem var(--button-primary-shadow),
+		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
+		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
+}
+
+.text-input-field {
+	transition: linear 0.1s;
+	background-color: var(--text-input-field-background);
+	color: var(--text-input-field-foreground);
+	border: 0.1rem solid var(--text-input-field-border);
+	height: 2.1rem;
+	padding: 0.3rem;
+	border-radius: 0.1rem;
+	font-weight: 500;
 }
