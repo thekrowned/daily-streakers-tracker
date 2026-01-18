@@ -1,11 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Management</title>
+		<title>Manage tracked players</title>
+		<link rel="stylesheet" href="../assets/global.css?v=20260118" />
+		<link rel="stylesheet" href="./manage.css?v=20260118" />
 	</head>
 	<body>
-		Management page
+		<header class="header">
+			<h1 class="header__title">Manage tracked players</h1>
+		</header>
+		<main>
+			<noscript>Please enable JavaScript</noscript>
+			<div class="card">
+				<div class="card__title">Add a player</div>
+				<form class="form-add-player">
+					<input
+						class="text-input-field"
+						type="text"
+						name="player-name"
+						id="player-name"
+						placeholder="Player name"
+						required
+					/>
+					<button type="submit" class="button-primary">Insert</button>
+				</form>
+			</div>
+			<div class="card">
+				<div class="card__title">Existing players</div>
+				<div class="card__description">Click on a player to select it</div>
+				<div>
+					<button id="players-remove" class="button-primary">
+						Remove selected
+					</button>
+				</div>
+				<ul class="players-list">
+					<li class="players-item">
+						<input
+							class="players-item__checkbox"
+							type="checkbox"
+							name="player-1"
+							id="player-1"
+						/>
+						<label class="players-item__label" for="player-1">
+							Test player
+						</label>
+					</li>
+				</ul>
+			</div>
+			<div class="login-container"></div>
+		</main>
 	</body>
 </html>
