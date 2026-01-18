@@ -45,24 +45,9 @@ app.get("/manage", (c) => {
 app.use("/manage/", async (c, next) => {
 	try {
 		const cookie = getCookie(c);
-		const clientUuid = cookie?.uuid;
+		const sessionValidity = await checkUuidValidity(cookie?.uuid);
 
-		if (!clientUuid) {
-			return c.redirect("../login/");
-		}
-
-		const existingUuid = await db
-			.select()
-			.from(admin_session)
-			.where(eq(admin_session.id, clientUuid));
-
-		if (existingUuid.length < 1) {
-			return c.redirect("../login/");
-		}
-
-		const currentTime = new Date();
-
-		if (currentTime.getTime() >= existingUuid[0].expires.getTime()) {
+		if (!sessionValidity) {
 			return c.redirect("../login/");
 		}
 
@@ -73,6 +58,29 @@ app.use("/manage/", async (c, next) => {
 		return c.text("Internal Server Error");
 	}
 });
+
+async function checkUuidValidity(clientUuid?: unknown): Promise<boolean> {
+	if (!clientUuid || typeof clientUuid != "string") {
+		return false;
+	}
+
+	const existingUuid = await db
+		.select()
+		.from(admin_session)
+		.where(eq(admin_session.id, clientUuid));
+
+	if (existingUuid.length < 1) {
+		return false;
+	}
+
+	const currentTime = new Date();
+
+	if (currentTime.getTime() >= existingUuid[0].expires.getTime()) {
+		return false;
+	}
+
+	return true;
+}
 
 app.get(
 	"/*",
