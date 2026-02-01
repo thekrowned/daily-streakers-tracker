@@ -17,11 +17,15 @@ import { updatePlayersInfo } from "./tools/update-players.js";
 import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 import { UtcAlarmManager } from "./utils/alarm.js";
 import { db } from "./database/db.js";
-import { players, daily_tracker } from "./database/schema.js";
+import { players, daily_tracker, tracked_players } from "./database/schema.js";
 import { eq, sql, not } from "drizzle-orm";
 import { assertString } from "./utils/assert.js";
 import { admin_session } from "./database/schema.js";
 import { adminSessionCleanup } from "./tools/admin-session-cleanup.js";
+import {
+	queueAddTrackedPlayers,
+	getQueueStatus,
+} from "./tools/add-tracked-players.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -87,7 +91,7 @@ app.get(
 	"/*",
 	serveStatic({
 		root: "./pages/",
-	})
+	}),
 );
 
 app.get("/api", (c) => {
@@ -127,11 +131,144 @@ app.post("/api/auth", async (c) => {
 		c.status(200);
 		c.header(
 			"Set-Cookie",
-			`uuid=${uuid}; Max-Age=${maxAge}; path=/; SameSite=Strict; Secure; HttpOnly`
+			`uuid=${uuid}; Max-Age=${maxAge}; path=/; SameSite=Strict; Secure; HttpOnly`,
 		);
 		return c.json({
 			success: true,
 			message: "Successful login",
+		});
+	} catch (error) {
+		console.error(error);
+		c.status(500);
+		return c.json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
+app.use("/api/manage/*", async (c, next) => {
+	try {
+		const cookie = getCookie(c);
+		const sessionValidity = await checkUuidValidity(cookie?.uuid);
+
+		if (!sessionValidity) {
+			c.status(401);
+			return c.json({
+				success: false,
+				message: "You're not authenticated, please login.",
+			});
+		}
+
+		await next();
+	} catch (error) {
+		console.error(error);
+		c.status(500);
+		return c.json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
+app.post("/api/manage/add-tracked-players", async (c) => {
+	try {
+		const data = await c.req.json();
+
+		const players = data?.players;
+
+		if (!Array.isArray(players)) {
+			c.status(400);
+			return c.json({
+				success: false,
+				message: "Players array not found",
+			});
+		}
+
+		queueAddTrackedPlayers(players);
+
+		return c.json({
+			success: true,
+			message: "Adding username(s) to tracked players… this might take a while",
+		});
+	} catch (error) {
+		console.error(error);
+		c.status(500);
+		return c.json({
+			success: false,
+			message: "Internal Server Error",
+		});
+	}
+});
+
+app.get("/api/manage/add-tracked-players/queue-status", async (c) => {
+	const { queue, processing } = getQueueStatus();
+	return c.json({
+		success: true,
+		message: "-",
+		data: {
+			queue: queue.join(", "),
+			processing: processing,
+		},
+	});
+});
+
+app.post("/api/manage/remove-tracked-players", async (c) => {
+	try {
+		const data = await c.req.json();
+
+		const playersId = data?.players_id;
+
+		if (!Array.isArray(playersId)) {
+			c.status(400);
+			return c.json({
+				success: false,
+				message: "Players ID array not found",
+			});
+		}
+
+		let removed: number[] = [];
+		let errored: number[] = [];
+
+		for (let i = 0; i < playersId.length; i++) {
+			const playerId = playersId[i];
+
+			if (typeof playerId != "number") {
+				continue;
+			}
+
+			try {
+				await db
+					.delete(tracked_players)
+					.where(eq(tracked_players.osu_id, playerId));
+			} catch (error) {
+				console.error(error);
+				errored.push(playerId);
+				continue;
+			}
+
+			removed.push(playerId);
+		}
+
+		if (errored.length > 0) {
+			c.status(500);
+			return c.json({
+				success: false,
+				message:
+					"There was an error that caused partial removal of specified player(s)",
+				data: {
+					removed: removed.join(", "),
+					errored: errored.join(", "),
+				},
+			});
+		}
+
+		return c.json({
+			success: true,
+			message: "Successfully removed specified player(s)",
+			data: {
+				removed: removed.join(", "),
+			},
 		});
 	} catch (error) {
 		console.error(error);
@@ -202,7 +339,7 @@ serve(
 	},
 	(info) => {
 		console.log(`Server is running on http://localhost:${info.port}`);
-	}
+	},
 );
 
 const updatePlayersTimes: [number, number][] = [];
