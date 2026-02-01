@@ -42,7 +42,7 @@ app.get("/manage", (c) => {
 	return c.redirect("./manage/");
 });
 
-app.use("/manage/", async (c, next) => {
+app.use("/manage/*", async (c, next) => {
 	try {
 		const cookie = getCookie(c);
 		const sessionValidity = await checkUuidValidity(cookie?.uuid);
