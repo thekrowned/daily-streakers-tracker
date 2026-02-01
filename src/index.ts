@@ -21,6 +21,7 @@ import { players, daily_tracker } from "./database/schema.js";
 import { eq, sql, not } from "drizzle-orm";
 import { assertString } from "./utils/assert.js";
 import { admin_session } from "./database/schema.js";
+import { adminSessionCleanup } from "./tools/admin-session-cleanup.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -225,4 +226,16 @@ UtcAlarmManager.add({
 		[23, 15],
 		[23, 45],
 	],
+});
+
+const adminSessionCleaningTimes: [number, number][] = [];
+for (let i = 1; i <= 23; i++) {
+	adminSessionCleaningTimes.push([i, 0]);
+	adminSessionCleaningTimes.push([i, 30]);
+}
+
+UtcAlarmManager.add({
+	name: "Auth Cleanup",
+	callback: adminSessionCleanup,
+	time: adminSessionCleaningTimes,
 });
