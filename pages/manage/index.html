@@ -18,7 +18,12 @@
 			<noscript>Please enable JavaScript</noscript>
 			<div class="card">
 				<div class="card__title">Add a player</div>
-				<form class="form-add-player">
+				<div class="card__description">
+					Use &quot;&semi;&quot; as a separator to add multiple players. Please
+					make sure that a player actually exist to minimise API calls to
+					osu!server.
+				</div>
+				<form class="form-add-player" id="form-add-player">
 					<input
 						class="text-input-field"
 						type="text"
@@ -55,4 +60,5 @@
 			<div class="login-container"></div>
 		</main>
 	</body>
+	<script src="./manage.js?v=20250214"></script>
 </html>
