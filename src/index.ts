@@ -280,6 +280,18 @@ app.post("/api/manage/remove-tracked-players", async (c) => {
 	}
 });
 
+app.get("/api/manage/tracked-players", async (c) => {
+	const trackedPlayers = await db.select().from(tracked_players);
+
+	return c.json({
+		success: true,
+		message: "-",
+		data: {
+			players: trackedPlayers,
+		},
+	});
+});
+
 app.get("/api/my-rank", async (c) => {
 	const myRank = await OsuAPI.getMyUserRank();
 	return c.text(`My osu rank is ${myRank}`);
