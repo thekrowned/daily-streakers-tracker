@@ -177,7 +177,7 @@ buttonPlayersRemove.addEventListener("click", async () => {
 
 				throw new Error(`Failed to remove ${errored.length} players.`);
 			} else {
-				throw new Error("Server error");
+				throw new Error(removePlayersResData?.message ?? "");
 			}
 		}
 
