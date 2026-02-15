@@ -1,3 +1,5 @@
+// @ts-check
+"use strict";
 const formAddPlayer = document.getElementById("form-add-player");
 
 formAddPlayer.addEventListener("submit", async (e) => {
@@ -43,6 +45,8 @@ formAddPlayer.addEventListener("submit", async (e) => {
 				`${playerNames.length} players detected. ${addPlayersResData?.message}`,
 			);
 			formAddPlayer.reset();
+		} else {
+			throw new Error(addPlayersResData?.message ?? "");
 		}
 	} catch (error) {
 		console.error(error);
