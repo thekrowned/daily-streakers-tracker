@@ -107,6 +107,87 @@ async function generatePlayersItem() {
 	}
 }
 
+// ===== Remove players =====
+
+const buttonPlayersRemove = document.getElementById("players-remove");
+
+buttonPlayersRemove.addEventListener("click", async () => {
+	const players = [];
+
+	const playerItems = document.querySelectorAll(
+		".players-list > .players-item > input",
+	);
+
+	for (let i = 0; i < playerItems.length; i++) {
+		const playerItem = playerItems[i];
+		const playerId = parseInt(playerItem.getAttribute("data-id"));
+		const playerName = playerItem.getAttribute("data-name");
+		const checked = playerItem.checked;
+
+		if (!isNaN(playerId) && playerId >= 0 && checked) {
+			players.push({
+				id: playerId,
+				name: playerName || playerId,
+			});
+		}
+	}
+
+	try {
+		console.log(players);
+		console.log(playerItems);
+		if (players.length <= 0) {
+			throw new Error("No player(s) selected!");
+		}
+
+		const confirmRemove = prompt(
+			`Do you want to remove ${players.length} tracked player(s)? If so, type "${players.length}".\nAffected username(s): ${players.map((p) => p.name).join(", ")}`,
+		);
+
+		if (parseInt(confirmRemove) !== players.length) {
+			return;
+		}
+
+		const removePlayersResponse = await fetch(
+			"../api/manage/remove-tracked-players",
+			{
+				method: "POST",
+				body: JSON.stringify({
+					players_id: players.map((p) => p.id),
+				}),
+				headers: { "Content-Type": "application/json" },
+			},
+		);
+
+		const removePlayersResData = await removePlayersResponse.json();
+
+		const removed = removePlayersResData?.data?.removed;
+		const errored = removePlayersResData?.data?.errored;
+
+		if (removePlayersResData?.success === true) {
+			alert(`Removed ${removed.length} players`);
+		} else {
+			if (Array.isArray(errored)) {
+				// Log errored players
+				const erroredNames = [];
+				errored.forEach((e) => {
+					const name = players.find((p) => p.id === e)?.name || e;
+					erroredNames.push(name);
+				});
+				console.error("Errored", erroredNames);
+
+				throw new Error(`Failed to remove ${errored.length} players.`);
+			} else {
+				throw new Error("Server error");
+			}
+		}
+
+		generatePlayersItem();
+	} catch (error) {
+		console.error(error);
+		alert(`${error?.message || "Something unexpected happened."}`);
+	}
+});
+
 // ===== Main =====
 async function main() {
 	await generatePlayersItem();
