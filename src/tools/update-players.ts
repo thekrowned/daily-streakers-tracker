@@ -4,7 +4,7 @@ import { OsuAPI } from "../osu-api.js";
 import { User } from "osu-api-v2-js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
-import { players, daily_tracker } from "../database/schema.js";
+import { players, daily_tracker, tracked_players } from "../database/schema.js";
 import { eq, sql } from "drizzle-orm";
 
 const consolePref = new ConsolePrefixed("[updatePlayersInfo]");
@@ -13,15 +13,12 @@ const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 
 async function updatePlayersInfo() {
 	try {
-		const playerNames = await readJson(
-			path.join(path.resolve(), "tracked-players.json")
-		);
+		const playerNames = await db
+			.select({ name: tracked_players.name })
+			.from(tracked_players);
 
-		if (!Array.isArray(playerNames)) {
-			throw new Error("The JSON file should be in array");
-		}
 		for (let i = 0; i < playerNames.length; i++) {
-			const playerName = playerNames[i];
+			const playerName = playerNames[i].name;
 			if (typeof playerName != "string" && typeof playerName != "number") {
 				throw new Error("Player must be string or number");
 			}
@@ -100,7 +97,7 @@ async function updatePlayersInfo() {
 			const millisecondsSinceBeginning =
 				today.getTime() - beginningDate.getTime();
 			const daysSinceBeginning = Math.floor(
-				millisecondsSinceBeginning / 86400000
+				millisecondsSinceBeginning / 86400000,
 			);
 
 			const is_full_streaker: boolean = (() => {
@@ -166,7 +163,7 @@ async function updatePlayersInfo() {
 						daysSinceBeginning > lastUpdateDay
 					) {
 						consolePref.info(
-							`Resetting previous_daily_streak (${lastUpdateDay}/${daysSinceBeginning})`
+							`Resetting previous_daily_streak (${lastUpdateDay}/${daysSinceBeginning})`,
 						);
 						previousDailyStreak = 0;
 					} else {
@@ -183,7 +180,7 @@ async function updatePlayersInfo() {
 				}
 
 				consolePref.info(
-					`Curr (${storedCurrentDailyStreak} > ${incomingCurrentDailyStreak}) | Prev (${storedPreviousDailyStreak} > ${previousDailyStreak})`
+					`Curr (${storedCurrentDailyStreak} > ${incomingCurrentDailyStreak}) | Prev (${storedPreviousDailyStreak} > ${previousDailyStreak})`,
 				);
 
 				await db
