@@ -257,8 +257,8 @@ app.post("/api/manage/remove-tracked-players", async (c) => {
 				message:
 					"There was an error that caused partial removal of specified player(s)",
 				data: {
-					removed: removed.join(", "),
-					errored: errored.join(", "),
+					removed: removed,
+					errored: errored,
 				},
 			});
 		}
@@ -267,7 +267,7 @@ app.post("/api/manage/remove-tracked-players", async (c) => {
 			success: true,
 			message: "Successfully removed specified player(s)",
 			data: {
-				removed: removed.join(", "),
+				removed: removed,
 			},
 		});
 	} catch (error) {
