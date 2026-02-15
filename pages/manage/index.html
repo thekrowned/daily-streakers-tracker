@@ -44,17 +44,19 @@
 					</button>
 				</div>
 				<ul class="players-list">
-					<li class="players-item">
-						<input
-							class="players-item__checkbox"
-							type="checkbox"
-							name="player-1"
-							id="player-1"
-						/>
-						<label class="players-item__label" for="player-1">
-							Test player
-						</label>
-					</li>
+					<template id="template-players-item">
+						<li class="players-item">
+							<input
+								class="players-item__checkbox"
+								type="checkbox"
+								name="player-0"
+								id="player-0"
+								data-id="0"
+								data-name=""
+							/>
+							<label class="players-item__label" for="player-0">-</label>
+						</li>
+					</template>
 				</ul>
 			</div>
 			<div class="login-container"></div>
