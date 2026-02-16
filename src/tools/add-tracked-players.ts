@@ -3,6 +3,7 @@ import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
 import { eq } from "drizzle-orm";
 import { tracked_players } from "../database/schema.js";
+import { updatePlayerData } from "./update-players.js";
 
 const consolePref = new ConsolePrefixed("[add-tracked-players]");
 
@@ -45,6 +46,7 @@ async function addTrackedPlayers() {
 					osu_id: player.id,
 					name: player.username,
 				});
+				await updatePlayerData(player.username);
 			}
 		} catch (error) {
 			consolePref.error(error);
