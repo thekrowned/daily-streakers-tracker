@@ -65,7 +65,6 @@ queueStatusElement.addEventListener("click", () => {
 
 const QueueStatus = class {
 	static #isTracking = false;
-	static #timerObject;
 
 	static track = function () {
 		if (QueueStatus.#isTracking) {
@@ -76,30 +75,48 @@ const QueueStatus = class {
 		queueStatusElement.textContent = `Queue status: Fetching status...`;
 
 		QueueStatus.#isTracking = true;
-		QueueStatus.#timerObject = setInterval(() => {
-			fetch("../api/manage/add-tracked-players/queue-status", {
-				cache: "no-store",
-			})
-				.then((res) =>
-					res.json().then((data) => {
-						const queue = data?.data?.queue;
-						if (queue) {
-							queueStatusElement.hidden = false;
-							queueStatusElement.textContent = `Queue status: ${queue}`;
-						} else {
-							queueStatusElement.textContent = `Queue status: No queue`;
-							clearInterval(QueueStatus.#timerObject);
-							QueueStatus.#isTracking = false;
-							setTimeout(() => {
-								queueStatusElement.hidden = true;
-							}, 3000);
-						}
-					}),
-				)
-				.catch(() => {
-					queueStatusElement.textContent = `Queue status: Couldn't fetch queue status`;
-				});
-		}, 5000);
+
+		async function handleTracking() {
+			let continueTracking = false;
+
+			try {
+				const res = await fetch(
+					"../api/manage/add-tracked-players/queue-status",
+					{
+						cache: "no-store",
+					},
+				);
+
+				const data = await res.json();
+				const queue = await data?.data?.queue;
+
+				if (queue) {
+					continueTracking = true;
+					queueStatusElement.hidden = false;
+					queueStatusElement.textContent = `Queue status: ${queue}`;
+				} else {
+					continueTracking = false;
+					queueStatusElement.textContent = `Queue status: No queue`;
+					setTimeout(() => {
+						queueStatusElement.hidden = true;
+					}, 3000);
+				}
+			} catch (error) {
+				queueStatusElement.textContent = `Queue status: Couldn't fetch queue status. Retrying...`;
+				continueTracking = true;
+			} finally {
+				if (continueTracking) {
+					QueueStatus.#isTracking = true;
+					setTimeout(() => {
+						handleTracking();
+					}, 5000);
+				} else {
+					QueueStatus.#isTracking = false;
+				}
+			}
+		}
+
+		handleTracking();
 	};
 };
 
