@@ -1,5 +1,7 @@
 // @ts-check
 "use strict";
+
+// ===== Add player =====
 const formAddPlayer = document.getElementById("form-add-player");
 
 formAddPlayer.addEventListener("submit", async (e) => {
@@ -41,6 +43,7 @@ formAddPlayer.addEventListener("submit", async (e) => {
 		const addPlayersResData = await addPlayersResponse.json();
 
 		if (addPlayersResData?.success === true) {
+			QueueStatus.track();
 			alert(
 				`${playerNames.length} players detected. ${addPlayersResData?.message}`,
 			);
@@ -53,6 +56,52 @@ formAddPlayer.addEventListener("submit", async (e) => {
 		alert(`${error?.message || "Something unexpected happened."}`);
 	}
 });
+
+const queueStatusElement = document.getElementById("queue-status");
+
+queueStatusElement.addEventListener("click", () => {
+	queueStatusElement.classList.toggle("card__description--collapsed");
+});
+
+const QueueStatus = class {
+	static #isTracking = false;
+	static #timerObject;
+
+	static track = function () {
+		if (QueueStatus.#isTracking) {
+			return;
+		}
+
+		queueStatusElement.hidden = false;
+		queueStatusElement.textContent = `Queue status: Fetching status...`;
+
+		QueueStatus.#isTracking = true;
+		QueueStatus.#timerObject = setInterval(() => {
+			fetch("../api/manage/add-tracked-players/queue-status", {
+				cache: "no-store",
+			})
+				.then((res) =>
+					res.json().then((data) => {
+						const queue = data?.data?.queue;
+						if (queue) {
+							queueStatusElement.hidden = false;
+							queueStatusElement.textContent = `Queue status: ${queue}`;
+						} else {
+							queueStatusElement.textContent = `Queue status: No queue`;
+							clearInterval(QueueStatus.#timerObject);
+							QueueStatus.#isTracking = false;
+							setTimeout(() => {
+								queueStatusElement.hidden = true;
+							}, 3000);
+						}
+					}),
+				)
+				.catch(() => {
+					queueStatusElement.textContent = `Queue status: Couldn't fetch queue status`;
+				});
+		}, 5000);
+	};
+};
 
 // ===== Generate players-item =====
 const playerItemTemplate = document.importNode(
@@ -108,7 +157,6 @@ async function generatePlayersItem() {
 }
 
 // ===== Remove players =====
-
 const buttonPlayersRemove = document.getElementById("players-remove");
 
 buttonPlayersRemove.addEventListener("click", async () => {

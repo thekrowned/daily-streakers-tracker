@@ -63,7 +63,8 @@
 html {
 	background-color: var(--background);
 	color: var(--foreground);
-	font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+	font-family:
+		"Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
 		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
@@ -110,6 +111,12 @@ main {
 	font-size: 1rem;
 }
 
+.card__description--collapsed {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .button-primary {
 	transition: linear 0.1s;
 	background-color: var(--button-primary-background);
@@ -119,7 +126,8 @@ main {
 	cursor: pointer;
 	border-radius: 0.1rem;
 	font-weight: 700;
-	box-shadow: 0rem 0.1rem 0.2rem var(--button-primary-shadow),
+	box-shadow:
+		0rem 0.1rem 0.2rem var(--button-primary-shadow),
 		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
 		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
 }
@@ -128,7 +136,8 @@ main {
 	transition: linear 0.1s;
 	background-color: var(--button-primary-background-hover);
 	color: var(--button-primary-foreground);
-	box-shadow: 0rem 0.1rem 0.4rem var(--button-primary-shadow),
+	box-shadow:
+		0rem 0.1rem 0.4rem var(--button-primary-shadow),
 		0.1rem 0.1rem 0.4rem var(--button-primary-shadow),
 		-0.1rem 0.1rem 0.4rem var(--button-primary-shadow);
 }
@@ -137,7 +146,8 @@ main {
 	transition: linear 0.1s;
 	background-color: var(--button-primary-background-pressed);
 	color: var(--button-primary-foreground);
-	box-shadow: 0rem 0.1rem 0.2rem var(--button-primary-shadow),
+	box-shadow:
+		0rem 0.1rem 0.2rem var(--button-primary-shadow),
 		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
 		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
 }
