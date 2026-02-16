@@ -173,6 +173,10 @@ async function generatePlayersItem() {
 	}
 }
 
+document
+	.getElementById("players-refresh")
+	.addEventListener("click", () => generatePlayersItem());
+
 // ===== Remove players =====
 const buttonPlayersRemove = document.getElementById("players-remove");
 
