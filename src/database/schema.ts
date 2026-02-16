@@ -2,11 +2,6 @@ import { sql } from "drizzle-orm";
 import { sqliteTable } from "drizzle-orm/sqlite-core";
 import { int, text } from "drizzle-orm/sqlite-core";
 
-export const tracked_players = sqliteTable("tracked_players", {
-	osu_id: int().notNull().primaryKey(),
-	name: text(),
-});
-
 export const players = sqliteTable("players", {
 	osu_id: int().notNull().primaryKey(),
 	name: text(),

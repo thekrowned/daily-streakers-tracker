@@ -4,7 +4,7 @@ import { OsuAPI } from "../osu-api.js";
 import { User } from "osu-api-v2-js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
-import { players, daily_tracker, tracked_players } from "../database/schema.js";
+import { players, daily_tracker } from "../database/schema.js";
 import { eq, sql } from "drizzle-orm";
 
 const consoleTrack = new ConsolePrefixed("[updateAllTrackedPlayers]");
@@ -193,9 +193,7 @@ async function updatePlayerData(playerName: string) {
 
 async function updateAllTrackedPlayers() {
 	try {
-		const playerNames = await db
-			.select({ name: tracked_players.name })
-			.from(tracked_players);
+		const playerNames = await db.select({ name: players.name }).from(players);
 
 		for (let i = 0; i < playerNames.length; i++) {
 			const playerName = playerNames[i].name;

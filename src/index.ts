@@ -17,7 +17,7 @@ import { updateAllTrackedPlayers } from "./tools/update-players.js";
 import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 import { UtcAlarmManager } from "./utils/alarm.js";
 import { db } from "./database/db.js";
-import { players, daily_tracker, tracked_players } from "./database/schema.js";
+import { players, daily_tracker } from "./database/schema.js";
 import { eq, sql, not } from "drizzle-orm";
 import { assertString } from "./utils/assert.js";
 import { admin_session } from "./database/schema.js";
@@ -289,9 +289,12 @@ app.post("/api/manage/remove-tracked-players", async (c) => {
 			}
 
 			try {
+				console.log(`Deleting ${playerId}`);
 				await db
-					.delete(tracked_players)
-					.where(eq(tracked_players.osu_id, playerId));
+					.delete(daily_tracker)
+					.where(eq(daily_tracker.osu_id, playerId));
+
+				await db.delete(players).where(eq(players.osu_id, playerId));
 			} catch (error) {
 				console.error(error);
 				errored.push(playerId);
@@ -332,7 +335,9 @@ app.post("/api/manage/remove-tracked-players", async (c) => {
 });
 
 app.get("/api/manage/tracked-players", async (c) => {
-	const trackedPlayers = await db.select().from(tracked_players);
+	const trackedPlayers = await db
+		.select({ osu_id: players.osu_id, name: players.name })
+		.from(players);
 
 	return c.json({
 		success: true,

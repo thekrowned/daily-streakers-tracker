@@ -2,7 +2,7 @@ import { OsuAPI } from "../osu-api.js";
 import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
 import { eq } from "drizzle-orm";
-import { tracked_players } from "../database/schema.js";
+import { players } from "../database/schema.js";
 import { updatePlayerData } from "./update-players.js";
 
 const consolePref = new ConsolePrefixed("[add-tracked-players]");
@@ -31,21 +31,10 @@ async function addTrackedPlayers() {
 
 			const existingTrackedPlayer = await db
 				.select()
-				.from(tracked_players)
-				.where(eq(tracked_players.osu_id, player.id));
+				.from(players)
+				.where(eq(players.osu_id, player.id));
 
-			if (existingTrackedPlayer.length != 0) {
-				await db
-					.update(tracked_players)
-					.set({
-						name: player.username,
-					})
-					.where(eq(tracked_players.osu_id, player.id));
-			} else {
-				await db.insert(tracked_players).values({
-					osu_id: player.id,
-					name: player.username,
-				});
+			if (existingTrackedPlayer.length == 0) {
 				await updatePlayerData(player.username);
 			}
 		} catch (error) {
