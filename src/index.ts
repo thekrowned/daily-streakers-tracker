@@ -13,7 +13,7 @@ import {
 } from "hono/cookie";
 
 import { OsuAPI } from "./osu-api.js";
-import { updatePlayersInfo } from "./tools/update-players.js";
+import { updateTrackedPlayers } from "./tools/update-players.js";
 import { crawlAndUpdateDailyPlayers } from "./tools/crawl-daily-update.js";
 import { UtcAlarmManager } from "./utils/alarm.js";
 import { db } from "./database/db.js";
@@ -414,8 +414,8 @@ for (let i = 1; i <= 23; i++) {
 }
 
 UtcAlarmManager.add({
-	name: "Update Player Info (API)",
-	callback: updatePlayersInfo,
+	name: "Update Tracked Players",
+	callback: updateTrackedPlayers,
 	time: updatePlayersTimes,
 });
 

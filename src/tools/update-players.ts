@@ -7,11 +7,11 @@ import { db } from "../database/db.js";
 import { players, daily_tracker, tracked_players } from "../database/schema.js";
 import { eq, sql } from "drizzle-orm";
 
-const consolePref = new ConsolePrefixed("[updatePlayersInfo]");
+const consolePref = new ConsolePrefixed("[updateTrackedPlayers]");
 
 const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 
-async function updatePlayersInfo() {
+async function updateTrackedPlayers() {
 	try {
 		const playerNames = await db
 			.select({ name: tracked_players.name })
@@ -209,4 +209,4 @@ async function updatePlayersInfo() {
 	}
 }
 
-export { updatePlayersInfo };
+export { updateTrackedPlayers };
