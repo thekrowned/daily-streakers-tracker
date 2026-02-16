@@ -21,6 +21,11 @@
 	--button-primary-foreground: hsl(0, 0%, 100%);
 	--button-primary-shadow: hsla(0, 0%, 0%, 30%);
 
+	--button-text-background: hsla(0, 0%, 0%, 0);
+	--button-text-background-hover: hsla(0, 0%, 0%, 10%);
+	--button-text-background-pressed: hsla(0, 0%, 0%, 30%);
+	--button-text-foreground: hsl(0, 0%, 0%);
+
 	--text-input-field-background: hsl(0, 0%, 100%);
 	--text-input-field-foreground: hsl(0, 0%, 0%);
 	--text-input-field-border: hsl(0, 0%, 70%);
@@ -47,6 +52,11 @@
 		--button-primary-background-pressed: hsl(297, 50%, 20%);
 		--button-primary-foreground: hsl(0, 0%, 100%);
 		--button-primary-shadow: hsla(0, 0%, 0%, 10%);
+
+		--button-text-background: hsla(0, 0%, 100%, 0);
+		--button-text-background-hover: hsla(0, 0%, 100%, 0.2);
+		--button-text-background-pressed: hsla(0, 0%, 0%, 0.4);
+		--button-text-foreground: hsl(0, 0%, 100%);
 
 		--text-input-field-background: hsl(0, 0%, 10%);
 		--text-input-field-foreground: hsl(0, 0%, 100%);
@@ -150,6 +160,30 @@ main {
 		0rem 0.1rem 0.2rem var(--button-primary-shadow),
 		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
 		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
+}
+
+.button-text {
+	transition: linear 0.1s;
+	background-color: var(--button-text-background);
+	color: var(--button-text-foreground);
+	border: none;
+	height: 1.8rem;
+	cursor: pointer;
+	border-radius: 0.2rem;
+	font-weight: 700;
+	box-shadow: inset 0 0 0 0.1rem var(--button-text-shadow);
+}
+
+.button-text:hover {
+	transition: linear 0.1s;
+	background-color: var(--button-text-background-hover);
+	color: var(--button-text-foreground);
+}
+
+.button-text:active {
+	transition: linear 0.1s;
+	background-color: var(--button-text-background-pressed);
+	color: var(--button-text-foreground);
 }
 
 .text-input-field {
