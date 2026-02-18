@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Login</title>
+		<link rel="preload" href="../assets/global.css?v=20260216-1955" as="style" />
+		<link rel="stylesheet" href="../assets/global.css?v=20260216-1955" />
+		<link rel="preload" href="./login.css?v=20260117" as="style" />
+		<link rel="stylesheet" href="./login.css?v=20260117" />
+	</head>
+	<body>
+		<header class="header">
+			<h1 class="header__title">Administrator Login</h1>
+		</header>
+		<main>
+			<noscript>Please enable JavaScript</noscript>
+			<div class="login-container">
+				<div class="card">
+					<form class="login-form" id="form">
+						<div class="login-form__group">
+							<label class="login-form__label" for="username">Username</label>
+							<input
+								class="login-form__input text-input-field"
+								type="text"
+								name="username"
+								id="username"
+								required
+							/>
+						</div>
+						<div class="login-form__group">
+							<label class="login-form__label" for="password">Password</label>
+							<input
+								class="login-form__input text-input-field"
+								type="password"
+								name="password"
+								id="password"
+								required
+							/>
+						</div>
+						<button class="login-form__button button-primary" type="submit">
+							Login
+						</button>
+					</form>
+				</div>
+			</div>
+		</main>
+	</body>
+	<script>
+		const form = document.getElementById("form");
+
+		form.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const data = new FormData(form);
+
+			try {
+				const loginResponse = await fetch("../api/auth", {
+					method: "POST",
+					body: JSON.stringify({
+						username: data.get("username"),
+						password: data.get("password"),
+					}),
+					headers: { "Content-Type": "application/json" },
+				});
+
+				const loginData = await loginResponse.json();
+
+				if (loginData?.success) {
+					window.location.assign("../manage/");
+				} else {
+					const message = loginData?.message ?? "Unknown error from server.";
+					throw new Error(message);
+				}
+			} catch (error) {
+				console.error(error);
+				alert(`${error?.message || "Something unexpected happened."}`);
+			}
+		});
+	</script>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Manage tracked players</title>
+		<link rel="preload" href="../assets/global.css?v=20260216-1955" as="style" />
+		<link rel="stylesheet" href="../assets/global.css?v=20260216-1955" />
+		<link rel="preload" href="./manage.css?v=20260118" as="style" />
+		<link rel="stylesheet" href="./manage.css?v=20260118" />
+		<link rel="preload" href="../assets/check.svg" as="image" />
+	</head>
+	<body>
+		<header class="header">
+			<h1 class="header__title">Manage tracked players</h1>
+		</header>
+		<main>
+			<noscript>Please enable JavaScript</noscript>
+			<div class="card">
+				<div class="card__title">Add a player</div>
+				<div class="card__description">
+					Use &quot;&semi;&quot; as a separator to add multiple players. Please
+					make sure that a player actually exist to minimise API calls to
+					osu!server.
+				</div>
+				<form class="form-add-player" id="form-add-player">
+					<input
+						class="text-input-field"
+						type="text"
+						name="player-name"
+						id="player-name"
+						placeholder="Player name"
+						required
+					/>
+					<button type="submit" class="button-primary">Insert</button>
+				</form>
+				<div
+					class="card__description card__description--collapsed"
+					style="user-select: none; cursor: pointer"
+					title="Queue status. Click to expand/collapse."
+					id="queue-status"
+					hidden
+				>
+					Queue status: -
+				</div>
+			</div>
+			<div class="card">
+				<div class="card__title">Existing players</div>
+				<div class="card__description">Click on a player to select it</div>
+				<div>
+					<button id="players-remove" class="button-primary">
+						Remove selected
+					</button>
+					<button id="players-refresh" class="button-text">Refresh list</button>
+				</div>
+				<ul class="players-list">
+					<template id="template-players-item">
+						<li class="players-item">
+							<input
+								class="players-item__checkbox"
+								type="checkbox"
+								name="player-0"
+								id="player-0"
+								data-id="0"
+								data-name=""
+							/>
+							<label class="players-item__label" for="player-0">-</label>
+						</li>
+					</template>
+				</ul>
+			</div>
+			<div class="login-container"></div>
+		</main>
+	</body>
+	<script src="./manage.js?v=20260216"></script>
+</html>

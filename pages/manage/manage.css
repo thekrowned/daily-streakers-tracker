@@ -1,0 +1,88 @@
+:root {
+	--players-item-background: hsl(0, 0%, 90%);
+	--players-item-text: hsl(0, 0%, 0%);
+	--players-item-hover: hsl(0, 0%, 80%);
+	--players-item-checkbox-background: hsl(0, 0%, 100%);
+	--players-item-checkbox-checked: hsl(0, 0%, 0%);
+	--players-item-checkbox-border: hsl(0, 0%, 50%);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--players-item-background: hsl(0, 0%, 10%);
+		--players-item-text: hsl(0, 0%, 100%);
+		--players-item-hover: hsl(0, 0%, 0%);
+		--players-item-checkbox-background: hsl(0, 0%, 30%);
+		--players-item-checkbox-checked: hsl(0, 0%, 100%);
+		--players-item-checkbox-border: hsl(0, 0%, 80%);
+	}
+}
+
+.players-list {
+	background-color: transparent;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	gap: 0.3rem;
+	padding: 0.3rem 0;
+}
+
+.players-item {
+	background-color: var(--players-item-background);
+	color: var(--players-item-text);
+	border-radius: 1rem;
+	display: flex;
+	flex-direction: row;
+	padding: 0.3rem 0.9rem;
+	gap: 0.3rem;
+	position: relative;
+	overflow: hidden;
+	transition-duration: 0.1s;
+	align-items: center;
+}
+
+.players-item:hover {
+	background-color: var(--players-item-hover);
+}
+
+.players-item__label {
+	text-decoration-line: none;
+	color: var(--streakers-item-text);
+}
+
+.players-item__label::before {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	content: "";
+	background-color: transparent;
+	z-index: 1;
+}
+
+.players-item__checkbox {
+	appearance: none;
+	border-radius: 1rem;
+	box-shadow: inset 0 0 0 0.1rem var(--players-item-checkbox-border);
+	background-color: var(--players-item-checkbox-background);
+	width: 14px;
+	height: 14px;
+	overflow: hidden;
+	position: relative;
+}
+
+.players-item__checkbox:checked {
+	background-color: var(--players-item-checkbox-checked);
+	box-shadow: inset 0 0 0 0.1rem var(--players-item-checkbox-checked);
+}
+
+.players-item__checkbox:checked::before {
+	content: url("../assets/check.svg");
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	filter: invert(var(--inverted-when-dark));
+}

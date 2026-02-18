@@ -1,0 +1,17 @@
+.login-form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	margin-top: 0.3rem;
+}
+
+.login-form__group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.login-container {
+	max-width: 400px;
+	width: 100%;
+}

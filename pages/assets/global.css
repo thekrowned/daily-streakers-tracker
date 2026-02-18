@@ -1,0 +1,198 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+:root {
+	--background: hsl(0, 0%, 85%);
+	--foreground: hsl(0, 0%, 0%);
+
+	--header-background: hsl(297, 50%, 35%);
+	--header-foreground: hsl(0, 0%, 100%);
+	--header-shadow: hsl(0, 0%, 0%);
+
+	--card-background: hsl(0, 0%, 100%);
+	--card-foreground: hsl(0, 0%, 0%);
+	--card-shadow: hsla(0, 0%, 0%, 10%);
+
+	--button-primary-background: hsl(297, 50%, 35%);
+	--button-primary-background-hover: hsl(297, 50%, 45%);
+	--button-primary-background-pressed: hsl(297, 50%, 20%);
+	--button-primary-foreground: hsl(0, 0%, 100%);
+	--button-primary-shadow: hsla(0, 0%, 0%, 30%);
+
+	--button-text-background: hsla(0, 0%, 0%, 0);
+	--button-text-background-hover: hsla(0, 0%, 0%, 10%);
+	--button-text-background-pressed: hsla(0, 0%, 0%, 30%);
+	--button-text-foreground: hsl(0, 0%, 0%);
+
+	--text-input-field-background: hsl(0, 0%, 100%);
+	--text-input-field-foreground: hsl(0, 0%, 0%);
+	--text-input-field-border: hsl(0, 0%, 70%);
+
+	--inverted-when-dark: 0;
+	--inverted-when-light: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: hsl(0, 0%, 10%);
+		--foreground: hsl(0, 0%, 100%);
+
+		--header-background: hsl(297, 50%, 30%);
+		--header-foreground: hsl(0, 0%, 100%);
+		--header-shadow: hsl(0, 0%, 0%);
+
+		--card-background: hsl(0, 0%, 25%);
+		--card-foreground: hsl(0, 0%, 100%);
+		--card-shadow: hsla(0, 0%, 0%, 10%);
+
+		--button-primary-background: hsl(297, 50%, 35%);
+		--button-primary-background-hover: hsl(297, 50%, 45%);
+		--button-primary-background-pressed: hsl(297, 50%, 20%);
+		--button-primary-foreground: hsl(0, 0%, 100%);
+		--button-primary-shadow: hsla(0, 0%, 0%, 10%);
+
+		--button-text-background: hsla(0, 0%, 100%, 0);
+		--button-text-background-hover: hsla(0, 0%, 100%, 0.2);
+		--button-text-background-pressed: hsla(0, 0%, 0%, 0.4);
+		--button-text-foreground: hsl(0, 0%, 100%);
+
+		--text-input-field-background: hsl(0, 0%, 10%);
+		--text-input-field-foreground: hsl(0, 0%, 100%);
+		--text-input-field-border: hsl(0, 0%, 50%);
+
+		--inverted-when-dark: 1;
+		--inverted-when-light: 0;
+	}
+	* {
+		color-scheme: dark;
+	}
+}
+
+html {
+	background-color: var(--background);
+	color: var(--foreground);
+	font-family:
+		"Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+		"Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.header {
+	padding: 0.6rem;
+	display: flex;
+	flex-direction: row;
+	background-color: var(--header-background);
+	color: var(--header-foreground);
+	box-shadow: 0 0 0.4rem var(--header-shadow);
+	position: sticky;
+	top: 0;
+	z-index: 100;
+}
+
+.header__title {
+	font-size: 1.5rem;
+}
+
+main {
+	padding: 0.6rem;
+	display: flex;
+	gap: 0.6rem;
+	flex-direction: column;
+}
+
+.card {
+	border-radius: 0.1rem;
+	background-color: var(--card-background);
+	color: var(--card-foreground);
+	padding: 0.6rem;
+	box-shadow: 0 0.2rem 0.2rem var(--card-shadow);
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.card__title {
+	font-weight: bold;
+	font-size: 1.1rem;
+}
+
+.card__description {
+	font-size: 1rem;
+}
+
+.card__description--collapsed {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.button-primary {
+	transition: linear 0.1s;
+	background-color: var(--button-primary-background);
+	color: var(--button-primary-foreground);
+	border: none;
+	height: 1.8rem;
+	cursor: pointer;
+	border-radius: 0.1rem;
+	font-weight: 700;
+	box-shadow:
+		0rem 0.1rem 0.2rem var(--button-primary-shadow),
+		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
+		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
+}
+
+.button-primary:hover {
+	transition: linear 0.1s;
+	background-color: var(--button-primary-background-hover);
+	color: var(--button-primary-foreground);
+	box-shadow:
+		0rem 0.1rem 0.4rem var(--button-primary-shadow),
+		0.1rem 0.1rem 0.4rem var(--button-primary-shadow),
+		-0.1rem 0.1rem 0.4rem var(--button-primary-shadow);
+}
+
+.button-primary:active {
+	transition: linear 0.1s;
+	background-color: var(--button-primary-background-pressed);
+	color: var(--button-primary-foreground);
+	box-shadow:
+		0rem 0.1rem 0.2rem var(--button-primary-shadow),
+		0.1rem 0.1rem 0.2rem var(--button-primary-shadow),
+		-0.1rem 0.1rem 0.2rem var(--button-primary-shadow);
+}
+
+.button-text {
+	transition: linear 0.1s;
+	background-color: var(--button-text-background);
+	color: var(--button-text-foreground);
+	border: none;
+	height: 1.8rem;
+	cursor: pointer;
+	border-radius: 0.2rem;
+	font-weight: 700;
+	box-shadow: inset 0 0 0 0.1rem var(--button-text-shadow);
+}
+
+.button-text:hover {
+	transition: linear 0.1s;
+	background-color: var(--button-text-background-hover);
+	color: var(--button-text-foreground);
+}
+
+.button-text:active {
+	transition: linear 0.1s;
+	background-color: var(--button-text-background-pressed);
+	color: var(--button-text-foreground);
+}
+
+.text-input-field {
+	transition: linear 0.1s;
+	background-color: var(--text-input-field-background);
+	color: var(--text-input-field-foreground);
+	border: 0.1rem solid var(--text-input-field-border);
+	height: 2.1rem;
+	padding: 0.3rem;
+	border-radius: 0.1rem;
+	font-weight: 500;
+}
