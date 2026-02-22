@@ -10,18 +10,25 @@ const sorterSelect = /** @type {HTMLSelectElement} */ (
 );
 const spanInfo = document.getElementById("info");
 
-function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
-	const li = document.createElement("li");
-	li.classList.add("streakers-list__item");
+const streakersItemTemplate = document.importNode(
+	document.getElementById("template-streakers-list__item").content,
+	true,
+);
 
-	const link = document.createElement("a");
-	link.classList.add("streakers-list__link");
+function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
+	const newStreakersItem = streakersItemTemplate.cloneNode(true);
+
+	const li = newStreakersItem.querySelector(".streakers-list__item");
+
+	const link = newStreakersItem.querySelector(".streakers-list__link");
 	link.textContent = playerName;
 	link.setAttribute("target", "_blank");
-	link.href = `https://osu.ppy.sh/users/${osuId}`;
+	link.setAttribute("href", `https://osu.ppy.sh/users/${osuId}`);
 
-	li.appendChild(link);
-
+	const tierDiv = newStreakersItem.querySelector(".streakers-list__tier");
+	const tierImage = newStreakersItem.querySelector(
+		".streakers-list__tier-image",
+	);
 	let arrowSrc = null;
 	let alt = null;
 	let outlineTierClassname = null;
@@ -52,17 +59,10 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 	}
 
 	if (arrowSrc) {
-		const tierStatus = document.createElement("div");
-		tierStatus.classList.add("streakers-list__tier");
-
-		const tierImage = document.createElement("img");
-		tierImage.classList.add("streakers-list__tier-image");
-		tierImage.alt = alt;
-		tierImage.src = arrowSrc;
-
-		tierStatus.appendChild(tierImage);
-
-		li.appendChild(tierStatus);
+		tierImage.setAttribute("alt", alt);
+		tierImage.setAttribute("src", arrowSrc);
+	} else {
+		tierDiv.remove();
 	}
 
 	if (hasPlayedToday) {
@@ -74,7 +74,7 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 		}
 	}
 
-	return li;
+	return newStreakersItem;
 }
 
 async function fetchStreakers() {
