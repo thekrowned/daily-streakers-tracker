@@ -31,3 +31,5 @@ dist/
 package.json
 package-lock.json
 README.md
+src/database/migrations/
+*.svg
