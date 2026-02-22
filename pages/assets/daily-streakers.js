@@ -77,7 +77,7 @@ function createStreakersItem({
 		".streakers-list__insert-helper",
 	);
 
-	if (showCurrent) {
+	if (showCurrent && Number(currentStreak) > 0) {
 		const currElement = countElement.cloneNode(true);
 		const currentText =
 			showPrevious || showBest ? `Curr: ${currentStreak}` : currentStreak;
@@ -86,7 +86,7 @@ function createStreakersItem({
 		li.insertBefore(currElement, helperElement);
 	}
 
-	if (showBest) {
+	if (showBest && Number(bestStreak) > 0) {
 		const bestElement = countElement.cloneNode(true);
 		const bestText =
 			showPrevious || showCurrent ? `Best: ${bestStreak}` : bestStreak;
@@ -160,8 +160,8 @@ async function renderStreakersItem(streakers, { showCurrent, showBest }) {
 			currentStreak: player.current_streak,
 			previousStreak: player.previous_daily_streak,
 			options: {
-				showBest: !isFullStreaker ? (showBest ?? false) : false,
-				showCurrent: !isFullStreaker ? (showCurrent ?? false) : false,
+				showBest: showBest ?? false,
+				showCurrent: showCurrent ?? false,
 			},
 		});
 		if (isFullStreaker) {
