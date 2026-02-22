@@ -15,7 +15,16 @@ const streakersItemTemplate = document.importNode(
 	true,
 );
 
-function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
+function createStreakersItem({
+	playerName,
+	osuId,
+	hasPlayedToday,
+	tierIndex,
+	currentStreak,
+	bestStreak,
+	previousStreak,
+	options: { showCurrent, showBest },
+}) {
 	const newStreakersItem = streakersItemTemplate.cloneNode(true);
 
 	const li = newStreakersItem.querySelector(".streakers-list__item");
@@ -29,38 +38,76 @@ function createStreakersItem({ playerName, osuId, hasPlayedToday, tierIndex }) {
 	const tierImage = newStreakersItem.querySelector(
 		".streakers-list__tier-image",
 	);
-	let arrowSrc = null;
-	let alt = null;
+	let arrowTierSrc = null;
+	let altTier = null;
 	let outlineTierClassname = null;
+
+	let showPrevious = false;
 
 	if (typeof tierIndex == "number") {
 		switch (tierIndex) {
 			case -3:
-				arrowSrc = "./assets/arrow-down-double.png";
-				alt = "This player is no longer a full streaker.";
+				arrowTierSrc = "./assets/arrow-down-double.png";
+				altTier = "This player is no longer a full streaker.";
 				outlineTierClassname = "streakers-list__item--fallen";
+				showPrevious = true;
 				break;
 			case -2:
-				arrowSrc = "./assets/arrow-down-double.png";
-				alt = "This player has just lost their streak significantly.";
+				arrowTierSrc = "./assets/arrow-down-double.png";
+				altTier = "This player has just lost their streak significantly.";
 				outlineTierClassname = "streakers-list__item--downgraded";
+				showPrevious = true;
 				break;
 			case -1:
-				arrowSrc = "./assets/arrow-down.png";
-				alt = "This player is no longer a casual streaker.";
+				arrowTierSrc = "./assets/arrow-down.png";
+				altTier = "This player is no longer a casual streaker.";
+				showPrevious = true;
 				break;
 			case 1:
-				arrowSrc = "./assets/arrow-up.png";
-				alt = "This player has just became a casual streaker.";
+				arrowTierSrc = "./assets/arrow-up.png";
+				altTier = "This player has just became a casual streaker.";
 				outlineTierClassname = "streakers-list__item--upgraded";
 			default:
 				break;
 		}
 	}
 
-	if (arrowSrc) {
-		tierImage.setAttribute("alt", alt);
-		tierImage.setAttribute("src", arrowSrc);
+	const countElement = newStreakersItem.querySelector(".streakers-list__count");
+	const helperElement = newStreakersItem.querySelector(
+		".streakers-list__insert-helper",
+	);
+
+	if (showCurrent) {
+		const currElement = countElement.cloneNode(true);
+		const currentText =
+			showPrevious || showBest ? `Curr: ${currentStreak}` : currentStreak;
+		currElement.setAttribute("aria-description", "Current streak");
+		currElement.textContent = currentText;
+		li.insertBefore(currElement, helperElement);
+	}
+
+	if (showBest) {
+		const bestElement = countElement.cloneNode(true);
+		const bestText =
+			showPrevious || showCurrent ? `Best: ${bestStreak}` : bestStreak;
+		bestElement.setAttribute("aria-description", "Best streak");
+		bestElement.textContent = bestText;
+		li.insertBefore(bestElement, helperElement);
+	}
+
+	if (showPrevious) {
+		const prevElement = countElement.cloneNode(true);
+		prevElement.setAttribute("aria-description", "Previous streak");
+		prevElement.textContent = `Prev: ${previousStreak}`;
+		li.insertBefore(prevElement, helperElement);
+	}
+
+	countElement.remove();
+	helperElement.remove();
+
+	if (arrowTierSrc) {
+		tierImage.setAttribute("alt", altTier);
+		tierImage.setAttribute("src", arrowTierSrc);
 	} else {
 		tierDiv.remove();
 	}
@@ -93,7 +140,7 @@ async function fetchStreakers() {
 	return streakers;
 }
 
-async function renderStreakersItem(streakers) {
+async function renderStreakersItem(streakers, { showCurrent, showBest }) {
 	if (!Array.isArray(streakers)) {
 		throw new Error("Data is not of array type");
 	}
@@ -103,13 +150,21 @@ async function renderStreakersItem(streakers) {
 	notStreakersList.innerHTML = "";
 
 	streakers.forEach((player) => {
+		const isFullStreaker = player.full_streaker;
 		const playerElement = createStreakersItem({
 			playerName: player.name,
 			osuId: player.osu_id,
 			hasPlayedToday: player.has_played_today,
 			tierIndex: player.tier_change,
+			bestStreak: player.best_daily_streak,
+			currentStreak: player.current_streak,
+			previousStreak: player.previous_daily_streak,
+			options: {
+				showBest: !isFullStreaker ? (showBest ?? false) : false,
+				showCurrent: !isFullStreaker ? (showCurrent ?? false) : false,
+			},
 		});
-		if (player.full_streaker) {
+		if (isFullStreaker) {
 			fullStreakersList.appendChild(playerElement);
 		} else {
 			if (player.is_streaking) {
@@ -187,7 +242,10 @@ async function sortStreakers(streakers, mode) {
 sorterSelect.addEventListener("input", async (e) => {
 	const value = e.target.value;
 	streakersData = await sortStreakers(streakersData, value);
-	renderStreakersItem(streakersData);
+	renderStreakersItem(streakersData, {
+		showBest: value === "best_daily_streak",
+		showCurrent: value === "streak",
+	});
 	if (LOCAL_STORAGE_AVAILABLE) {
 		localStorage.setItem("sort-by", value);
 	}
@@ -207,7 +265,10 @@ async function main() {
 	sorterSelect.value = sortBy;
 	try {
 		streakersData = await sortStreakers(streakers, sortBy);
-		renderStreakersItem(streakersData);
+		renderStreakersItem(streakersData, {
+			showBest: sortBy === "best_daily_streak",
+			showCurrent: sortBy === "streak",
+		});
 	} catch (error) {
 		// Fallback to unsorted items if sorting fails
 		streakersData = streakers;
