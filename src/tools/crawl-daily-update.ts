@@ -47,10 +47,10 @@ async function crawlAndUpdateDailyPlayers() {
 						const retrievedId = parseInt(
 							row
 								.querySelector(".ranking-page-table-main__link.js-usercard")
-								?.getAttribute("data-user-id") ?? ""
+								?.getAttribute("data-user-id") ?? "",
 						);
 						const retrievedName = row.querySelector(
-							".ranking-page-table-main__link.js-usercard > span"
+							".ranking-page-table-main__link.js-usercard > span",
 						)?.textContent;
 
 						// Push values with their correct types
@@ -82,7 +82,7 @@ async function crawlAndUpdateDailyPlayers() {
 					} else {
 						return null;
 					}
-				}
+				},
 			);
 
 			if (typeof detectedNextPageurl == "string") {

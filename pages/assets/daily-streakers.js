@@ -141,38 +141,38 @@ async function sortStreakers(streakers, mode) {
 	switch (mode) {
 		case "name":
 			streakersSorted = streakers.toSorted((a, b) =>
-				nameSortValue(a.name, b.name)
+				nameSortValue(a.name, b.name),
 			);
 			break;
 		case "rank":
 			streakersSorted = streakers.toSorted(
-				(a, b) => a.rank_standard - b.rank_standard
+				(a, b) => a.rank_standard - b.rank_standard,
 			);
 			break;
 		case "streak":
 			// Sorted by name first and then by total streak
 			// There's probably a better way of doing this
 			streakersSorted = streakers.toSorted((a, b) =>
-				nameSortValue(a.name, b.name)
+				nameSortValue(a.name, b.name),
 			);
 			streakersSorted = streakersSorted.toSorted(
-				(a, b) => b.current_streak - a.current_streak
+				(a, b) => b.current_streak - a.current_streak,
 			);
 			break;
 		case "best_daily_streak":
 			streakersSorted = streakers.toSorted((a, b) =>
-				nameSortValue(a.name, b.name)
+				nameSortValue(a.name, b.name),
 			);
 			streakersSorted = streakersSorted.toSorted(
-				(a, b) => b.best_daily_streak - a.best_daily_streak
+				(a, b) => b.best_daily_streak - a.best_daily_streak,
 			);
 			break;
 		case "not_played":
 			streakersSorted = streakers.toSorted((a, b) =>
-				nameSortValue(a.name, b.name)
+				nameSortValue(a.name, b.name),
 			);
 			streakersSorted = streakersSorted.toSorted(
-				(a, b) => a.has_played_today - b.has_played_today
+				(a, b) => a.has_played_today - b.has_played_today,
 			);
 			break;
 		default:

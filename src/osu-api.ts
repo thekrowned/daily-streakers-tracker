@@ -11,7 +11,7 @@ const OSU_OWN_CLIENT_SECRET = process.env.OSU_OWN_CLIENT_SECRET;
 const OSU_USER_ID = process.env.OSU_USER_ID;
 if (!OSU_OWN_CLIENT_ID || !OSU_OWN_CLIENT_SECRET || !OSU_USER_ID) {
 	throw new Error(
-		"Please configure these variables in the .env file: OSU_OWN_CLIENT_ID, OSU_OWN_CLIENT_SECRET, OSU_USER_ID"
+		"Please configure these variables in the .env file: OSU_OWN_CLIENT_ID, OSU_OWN_CLIENT_SECRET, OSU_USER_ID",
 	);
 }
 

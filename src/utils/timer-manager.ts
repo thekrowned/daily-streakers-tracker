@@ -17,24 +17,24 @@ const TimerManager = class {
 
 	static findIndexExistingTimer = function (name: string) {
 		const timerIndex = TimerManager.timers.findIndex(
-			(timer) => timer.name == name
+			(timer) => timer.name == name,
 		);
 		return timerIndex;
 	};
 
 	static handleExecution = async function (
 		name: string,
-		callback: () => Promise<void>
+		callback: () => Promise<void>,
 	) {
 		const logTime = new Date();
 		consolePref.info(
-			`Running ${name} (${callback.name}) ${logTime.toUTCString()}`
+			`Running ${name} (${callback.name}) ${logTime.toUTCString()}`,
 		);
 		try {
 			await callback();
 		} catch (error) {
 			consolePref.error(
-				`There was an unhandled error while executing ${name} (${callback.name})`
+				`There was an unhandled error while executing ${name} (${callback.name})`,
 			);
 			consolePref.error(error);
 		}

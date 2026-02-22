@@ -12,7 +12,7 @@ async function handleCallback(callback: () => Promise<void>) {
 		await callback();
 	} catch (error) {
 		consolePref.error(
-			`There was an unhandled error while executing ${callback.name}`
+			`There was an unhandled error while executing ${callback.name}`,
 		);
 		consolePref.error(error);
 	}
@@ -29,7 +29,7 @@ const alarmTimer = setInterval(() => {
 				consolePref.info(
 					`Running ${alarmCallback.name} (${
 						alarmCallback.callback.name
-					}) ${currTime.toUTCString()}`
+					}) ${currTime.toUTCString()}`,
 				);
 				handleCallback(alarmCallback.callback);
 			}
@@ -73,7 +73,7 @@ const UtcAlarmManager = class {
 
 	static remove = function (name: string) {
 		const existingIndex = UtcAlarmManager.list.findIndex(
-			(alarm) => alarm.name == name
+			(alarm) => alarm.name == name,
 		);
 		if (existingIndex >= 0) {
 			UtcAlarmManager.list.splice(existingIndex, 1);
