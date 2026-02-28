@@ -21,7 +21,7 @@ const ownClientSecret = assertString(OSU_OWN_CLIENT_SECRET);
 const userId = convertNumber(OSU_USER_ID);
 
 async function createOsuAPI() {
-	const api = await API.createAsync(ownClientId, ownClientSecret);
+	const api = new API(ownClientId, ownClientSecret);
 
 	return api;
 }
