@@ -11,6 +11,7 @@ import {
 	generateCookie,
 	generateSignedCookie,
 } from "hono/cookie";
+import { Cache } from "./utils/cache.js";
 
 import { OsuAPI } from "./osu-api.js";
 import { updateAllTrackedPlayers } from "./tools/update-players.js";
@@ -354,6 +355,13 @@ app.get("/api/my-rank", async (c) => {
 });
 
 app.get("/api/daily-streakers", async (c) => {
+	const cacheName = "daily-streakers";
+	const existingCache = Cache.get(cacheName);
+
+	if (existingCache) {
+		return c.json(existingCache);
+	}
+
 	const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 	const millisecondsSinceBeginning =
 		new Date().getTime() - beginningDate.getTime();
@@ -397,6 +405,7 @@ app.get("/api/daily-streakers", async (c) => {
 		.from(players)
 		.leftJoin(daily_tracker, eq(daily_tracker.osu_id, players.osu_id));
 
+	Cache.set(cacheName, data);
 	return c.json(data);
 });
 
