@@ -20,19 +20,6 @@ const ownClientId = convertNumber(OSU_OWN_CLIENT_ID);
 const ownClientSecret = assertString(OSU_OWN_CLIENT_SECRET);
 const userId = convertNumber(OSU_USER_ID);
 
-async function createOsuAPI() {
-	const api = new API(ownClientId, ownClientSecret);
-
-	return api;
-}
-
-async function regenerateAPI() {
-	consolePref.info(`Regenerating API...`);
-	internalOsuAPI = await createOsuAPI();
-}
-
-let internalOsuAPI = await createOsuAPI();
-
 TimerManager.addInterval({
 	name: "API Check",
 	callback: checkApiValidity,
@@ -42,23 +29,55 @@ TimerManager.addInterval({
 async function checkApiValidity() {
 	const now = new Date();
 	try {
-		const expiryDate = internalOsuAPI.expires;
+		const expiryDate = OsuAPI.expire;
 		consolePref.info(`Checking api validity...`);
 		consolePref.info(`Expiry date: ${expiryDate}`);
 		if (expiryDate.getTime() - now.getTime() <= 4000_000) {
-			regenerateAPI();
+			OsuAPI.generateApi();
 		}
 	} catch (error) {
 		consolePref.error(error);
 		if ((error as APIError)?.message == "Unauthorized") {
-			regenerateAPI();
+			OsuAPI.generateApi();
 		}
 	}
 }
 
 const OsuAPI = class {
+	static #internalApi: API | null = null;
+
+	static get #api() {
+		if (OsuAPI.#internalApi === null) {
+			throw new Error("API unavailable");
+		}
+
+		return OsuAPI.#internalApi;
+	}
+
+	static set #api(api: API) {
+		OsuAPI.#internalApi = api;
+	}
+
+	static get expire() {
+		return OsuAPI.#api.expires;
+	}
+
+	static generateApi = async function () {
+		try {
+			const api = await API.createAsync(ownClientId, ownClientSecret);
+			OsuAPI.#api = api;
+		} catch (error) {
+			TimerManager.addTimeout({
+				name: "Retry Generate API",
+				callback: OsuAPI.generateApi,
+				time: 60000,
+			});
+			consolePref.error(error);
+		}
+	};
+
 	static getUserRank = async function (user: string | number): Promise<number> {
-		const userData = await internalOsuAPI.getUser(user, Ruleset.osu);
+		const userData = await OsuAPI.#api.getUser(user, Ruleset.osu);
 		const rank = assertNumber(userData.statistics.global_rank);
 		return rank;
 	};
@@ -69,7 +88,7 @@ const OsuAPI = class {
 	};
 
 	static getUser = async function (user: string | number) {
-		const data = await internalOsuAPI.getUser(user, Ruleset.osu);
+		const data = await OsuAPI.#api.getUser(user, Ruleset.osu);
 		return data;
 	};
 
@@ -77,9 +96,11 @@ const OsuAPI = class {
 		if (userIds.length > 50) {
 			throw new Error("Too many users to fetch for!");
 		}
-		const data = await internalOsuAPI.lookupUsers(userIds);
+		const data = await OsuAPI.#api.lookupUsers(userIds);
 		return data;
 	};
 };
+
+OsuAPI.generateApi();
 
 export { OsuAPI };
