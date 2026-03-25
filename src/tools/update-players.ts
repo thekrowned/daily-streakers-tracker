@@ -6,6 +6,7 @@ import { ConsolePrefixed } from "../utils/console-prefixed.js";
 import { db } from "../database/db.js";
 import { players, daily_tracker } from "../database/schema.js";
 import { eq, sql } from "drizzle-orm";
+import { timeoutReject } from "../utils/timeout-reject.js";
 
 const consoleTrack = new ConsolePrefixed("[updateAllTrackedPlayers]");
 const consoleUpdate = new ConsolePrefixed("[updatePlayer]");
@@ -15,7 +16,14 @@ const beginningDate = new Date("2024-07-25T00:00:00+00:00");
 async function updatePlayerData(playerName: string) {
 	try {
 		consoleUpdate.info(`Inserting ${playerName}`);
-		const user = await OsuAPI.getUser(playerName);
+		const user = await Promise.race([
+			OsuAPI.getUser(playerName),
+			timeoutReject(30000),
+		]);
+
+		if (typeof user != "object") {
+			throw new Error("Timeout");
+		}
 
 		const lastUpdate = user.daily_challenge_user_stats.last_update;
 		const today = new Date();

@@ -4,6 +4,7 @@ import { db } from "../database/db.js";
 import { eq } from "drizzle-orm";
 import { players } from "../database/schema.js";
 import { updatePlayerData } from "./update-players.js";
+import { timeoutReject } from "../utils/timeout-reject.js";
 
 const consolePref = new ConsolePrefixed("[add-tracked-players]");
 
@@ -27,15 +28,20 @@ async function addTrackedPlayers() {
 
 			consolePref.info("Adding " + username);
 
-			const player = await OsuAPI.getUser(username);
+			const player = await Promise.race([
+				OsuAPI.getUser(username),
+				timeoutReject(30000),
+			]);
 
-			const existingTrackedPlayer = await db
-				.select()
-				.from(players)
-				.where(eq(players.osu_id, player.id));
+			if (typeof player == "object") {
+				const existingTrackedPlayer = await db
+					.select()
+					.from(players)
+					.where(eq(players.osu_id, player.id));
 
-			if (existingTrackedPlayer.length == 0) {
-				await updatePlayerData(player.username);
+				if (existingTrackedPlayer.length == 0) {
+					await updatePlayerData(player.username);
+				}
 			}
 		} catch (error) {
 			consolePref.error(error);
