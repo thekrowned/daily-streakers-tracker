@@ -20,28 +20,28 @@ const ownClientId = convertNumber(OSU_OWN_CLIENT_ID);
 const ownClientSecret = assertString(OSU_OWN_CLIENT_SECRET);
 const userId = convertNumber(OSU_USER_ID);
 
-TimerManager.addInterval({
-	name: "API Check",
-	callback: checkApiValidity,
-	time: 3600_000,
-});
+// TimerManager.addInterval({
+// 	name: "API Check",
+// 	callback: checkApiValidity,
+// 	time: 3600_000,
+// });
 
-async function checkApiValidity() {
-	const now = new Date();
-	try {
-		const expiryDate = OsuAPI.expire;
-		consolePref.info(`Checking api validity...`);
-		consolePref.info(`Expiry date: ${expiryDate}`);
-		if (expiryDate.getTime() - now.getTime() <= 4000_000) {
-			OsuAPI.generateApi();
-		}
-	} catch (error) {
-		consolePref.error(error);
-		if ((error as APIError)?.message == "Unauthorized") {
-			OsuAPI.generateApi();
-		}
-	}
-}
+// async function checkApiValidity() {
+// 	const now = new Date();
+// 	try {
+// 		const expiryDate = OsuAPI.expire;
+// 		consolePref.info(`Checking api validity...`);
+// 		consolePref.info(`Expiry date: ${expiryDate}`);
+// 		if (expiryDate.getTime() - now.getTime() <= 4000_000) {
+// 			OsuAPI.generateApi();
+// 		}
+// 	} catch (error) {
+// 		consolePref.error(error);
+// 		if ((error as APIError)?.message == "Unauthorized") {
+// 			OsuAPI.generateApi();
+// 		}
+// 	}
+// }
 
 const OsuAPI = class {
 	static #internalApi: API | null = null;
@@ -103,5 +103,11 @@ const OsuAPI = class {
 };
 
 OsuAPI.generateApi();
+
+TimerManager.addInterval({
+	name: "Hourly API generation",
+	callback: OsuAPI.generateApi,
+	time: 3600_000,
+});
 
 export { OsuAPI };
