@@ -65,7 +65,12 @@ const OsuAPI = class {
 	static generateApi = async function () {
 		try {
 			consolePref.info(`Generating API...`);
-			const api = await API.createAsync(ownClientId, ownClientSecret, undefined, {set_token_on_expires: false, set_token_on_401: false});
+			const api = await API.createAsync(
+				ownClientId,
+				ownClientSecret,
+				undefined,
+				{ set_token_on_expires: false, set_token_on_401: false },
+			);
 			OsuAPI.#api = api;
 		} catch (error) {
 			TimerManager.addTimeout({
