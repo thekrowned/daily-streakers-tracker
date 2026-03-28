@@ -149,6 +149,25 @@ async function MainPage(pageState: pageState) {
 	const showBest = currentSort.name === "best-streak";
 	const showCurrent = currentSort.name === "current-streak";
 
+	const lastUpdates = data.map((players) => {
+		const dateString = players.last_update;
+		const dateObject = new Date(dateString);
+		const dateNumber = dateObject.getTime();
+
+		return {
+			text: dateString,
+			time: dateNumber,
+		};
+	});
+
+	const _lastUpdate = lastUpdates.toSorted((_a, _b) => {
+		const a = Number(_a.time);
+		const b = Number(_b.time);
+		return b - a;
+	})[0];
+
+	const lastUpdate = new Date(_lastUpdate.text).toUTCString();
+
 	return (
 		<html lang="en">
 			<head>
@@ -245,7 +264,10 @@ async function MainPage(pageState: pageState) {
 					</Card>
 					<Card
 						descriptions={
-							<span id="info">All items are updated every 30 minutes.</span>
+							<span id="info">
+								All items are updated every 30 minutes. (last update:&nbsp;
+								{lastUpdate})
+							</span>
 						}
 					></Card>
 					<footer>
