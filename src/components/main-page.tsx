@@ -132,7 +132,7 @@ async function MainPage() {
 					></Card>
 					<footer>
 						<span>
-							This website is open source! Check it on
+							This website is open source! Check it on&nbsp;
 							<a
 								href="https://github.com/thekrowned/daily-streakers-tracker"
 								target="_blank"
