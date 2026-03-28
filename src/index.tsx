@@ -141,7 +141,7 @@ app.use(
 	}),
 );
 
-app.get("/", (c) => {
+app.get("/", async (c) => {
 	return c.render(<MainPage />);
 });
 

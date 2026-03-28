@@ -1,6 +1,6 @@
 import { Card } from "./card.js";
 
-function MainPage() {
+async function MainPage() {
 	return (
 		<html lang="en">
 			<head>
