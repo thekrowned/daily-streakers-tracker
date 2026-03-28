@@ -21,7 +21,9 @@ async function MainPage() {
 	const data = await getData();
 
 	const fullStreakersData = data.filter((player) => player.full_streaker);
-	const casualStreakersData = data.filter((player) => player.is_streaking);
+	const casualStreakersData = data.filter(
+		(player) => player.is_streaking && !player.full_streaker,
+	);
 	const notStreakersData = data.filter(
 		(player) => !player.is_streaking && !player.full_streaker,
 	);
