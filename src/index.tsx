@@ -27,6 +27,8 @@ import {
 	queueAddTrackedPlayers,
 	getQueueStatus,
 } from "./tools/add-tracked-players.js";
+import { jsxRenderer } from "hono/jsx-renderer";
+import { MainPage } from "./components/main-page.js";
 
 const PORT = parseInt(`${process.env.SERVER_PORT}`);
 if (isNaN(PORT)) {
@@ -130,6 +132,17 @@ async function checkUuidValidity(clientUuid?: unknown): Promise<boolean> {
 
 	return true;
 }
+
+app.use(
+	"*",
+	jsxRenderer(({ children }) => {
+		return <>{children}</>;
+	}),
+);
+
+app.get("/", (c) => {
+	return c.render(<MainPage />);
+});
 
 app.get(
 	"/*",
