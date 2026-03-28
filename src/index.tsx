@@ -142,7 +142,7 @@ app.use(
 );
 
 app.get("/", async (c) => {
-	return c.render(<MainPage />);
+	return c.render(<MainPage sort={c.req.query("sort") || ""} />);
 });
 
 app.get(

@@ -17,8 +17,126 @@ async function getData() {
 	return data;
 }
 
-async function MainPage() {
+type pageState = {
+	sort: string;
+};
+
+const sortOptions: {
+	name: string;
+	uiName: string;
+}[] = [
+	{ name: "name", uiName: "Name" },
+	{ name: "rank", uiName: "Rank" },
+	{ name: "has-played", uiName: "Has Played" },
+	{ name: "current-streak", uiName: "Current Streak" },
+	{ name: "best-streak", uiName: "Best Streak" },
+];
+
+async function MainPage(pageState: pageState) {
+	const { sort } = pageState;
+	const currentSort =
+		sortOptions.find((s) => s.name === sort.split("_")[0]) || sortOptions[0];
+	const isReversed = sort.split("_")[1] === "rev";
+
 	const data = await getData();
+
+	// Everything has to be sorted by name first
+	data.sort((_a, _b) => {
+		const a = String(_a.name);
+		const b = String(_b.name);
+		if (a.toUpperCase() === b.toUpperCase()) {
+			return 0;
+		} else {
+			return a.toUpperCase() > b.toUpperCase() ? 1 : -1;
+		}
+	});
+
+	switch (currentSort.name) {
+		case "name":
+			if (isReversed) {
+				data.sort((_a, _b) => {
+					const a = String(_a.name);
+					const b = String(_b.name);
+					if (a.toUpperCase() === b.toUpperCase()) {
+						return 0;
+					} else {
+						return b.toUpperCase() > a.toUpperCase() ? 1 : -1;
+					}
+				});
+			}
+			// Everything has been sorted with ascending name by default
+			// So we only need descending function here
+			break;
+
+		case "rank":
+			if (isReversed) {
+				data.sort((_a, _b) => {
+					const a = Number(_a.rank_standard);
+					const b = Number(_b.rank_standard);
+					return b - a;
+				});
+			} else {
+				data.sort((_a, _b) => {
+					const a = Number(_a.rank_standard);
+					const b = Number(_b.rank_standard);
+					return a - b;
+				});
+			}
+			break;
+
+		case "current-streak":
+			if (isReversed) {
+				data.sort((_a, _b) => {
+					const a = Number(_a.current_streak);
+					const b = Number(_b.current_streak);
+					return a - b;
+				});
+			} else {
+				data.sort((_a, _b) => {
+					const a = Number(_a.current_streak);
+					const b = Number(_b.current_streak);
+					return b - a;
+				});
+			}
+			break;
+
+		case "best-streak":
+			if (isReversed) {
+				data.sort((_a, _b) => {
+					const a = Number(_a.best_daily_streak);
+					const b = Number(_b.best_daily_streak);
+					return a - b;
+				});
+			} else {
+				data.sort((_a, _b) => {
+					const a = Number(_a.best_daily_streak);
+					const b = Number(_b.best_daily_streak);
+					return b - a;
+				});
+			}
+			break;
+
+		case "has-played":
+			// Convert the boolean into number
+			if (isReversed) {
+				data.sort((_a, _b) => {
+					const a = Number(_a.has_played_today);
+					const b = Number(_b.has_played_today);
+					return a - b;
+				});
+			} else {
+				data.sort((_a, _b) => {
+					const a = Number(_a.has_played_today);
+					const b = Number(_b.has_played_today);
+					return b - a;
+				});
+			}
+			break;
+
+		default:
+			// Leave everything sorted by ascending name
+			break;
+	}
 
 	const fullStreakersData = data.filter((player) => player.full_streaker);
 	const casualStreakersData = data.filter(
@@ -28,8 +146,8 @@ async function MainPage() {
 		(player) => !player.is_streaking && !player.full_streaker,
 	);
 
-	const showBest = false;
-	const showCurrent = false;
+	const showBest = currentSort.name === "best-streak";
+	const showCurrent = currentSort.name === "current-streak";
 
 	return (
 		<html lang="en">
@@ -38,7 +156,7 @@ async function MainPage() {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<title>Daily Streakers Tracker</title>
 				<link rel="stylesheet" href="./assets/global.css?v=20260216-1955" />
-				<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260117" />
+				<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260329" />
 			</head>
 			<body>
 				<header class="header">
@@ -47,17 +165,17 @@ async function MainPage() {
 				<main>
 					<noscript>Please enable JavaScript</noscript>
 					<div class="sorter">
-						<label class="sorter__label" for="sorter__select">
-							Sort by:
-						</label>
-						<select name="sorter__select" id="sorter__select">
-							<option value="name">Name</option>
-							<option value="rank">Rank</option>
-							<option value="played">Has played</option>
-							<option value="not_played">Has not played</option>
-							<option value="streak">Current streak</option>
-							<option value="best_daily_streak">Best streak</option>
-						</select>
+						<label class="sorter__label">Sort by:</label>
+						<div class="sorter__list">
+							{sortOptions.map((s) => (
+								<a
+									class={`sorter__item ${currentSort.name === s.name ? "sorter__item--active" : ""}`}
+									href={`./?sort=${s.name}${currentSort.name === s.name && !isReversed ? "_rev" : ""}`}
+								>
+									{s.uiName}
+								</a>
+							))}
+						</div>
 					</div>
 					<Card
 						title="Full Streakers"
