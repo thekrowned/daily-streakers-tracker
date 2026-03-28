@@ -1,3 +1,5 @@
+import { Card } from "./card.js";
+
 function MainPage() {
 	return (
 		<html lang="en">
@@ -27,13 +29,12 @@ function MainPage() {
 							<option value="best_daily_streak">Best streak</option>
 						</select>
 					</div>
-					<div class="card">
-						<div class="card__title">Full Streakers</div>
-						<div class="card__descriptions">
-							Full streakers are those who never break their streaks since day
+					<Card
+						title="Full Streakers"
+						descriptions="Full streakers are those who never break their streaks since day
 							one which is really cool and should be appreciated for their hard
-							work.
-						</div>
+							work."
+					>
 						<ul class="streakers-list" id="streakers-list-full">
 							<template id="template-streakers-list__item">
 								<li class="streakers-list__item">
@@ -55,30 +56,28 @@ function MainPage() {
 								</li>
 							</template>
 						</ul>
-					</div>
-					<div class="card">
-						<div class="card__title">Casual Streakers</div>
-						<div class="card__descriptions">
-							Casual streakers are equally cool players whose streak value is
+					</Card>
+					<Card
+						title="Casual Streakers"
+						descriptions="Casual streakers are equally cool players whose streak value is
 							less than the total days of daily challenge, which also needs to
-							be appreciated for their dedication.
-						</div>
+							be appreciated for their dedication."
+					>
 						<ul class="streakers-list" id="streakers-list-casual"></ul>
-					</div>
-					<div class="card">
-						<div class="card__title">Not Streaking</div>
-						<div class="card__descriptions">
-							These players are former full streakers or casual streakers who
+					</Card>
+					<Card
+						title="Not Streaking"
+						descriptions="These players are former full streakers or casual streakers who
 							don't really play daily challenge anymore but still deserve
-							appreciations for the work that they've done.
-						</div>
+							appreciations for the work that they've done."
+					>
 						<ul class="streakers-list" id="streakers-list-not"></ul>
-					</div>
-					<div class="card">
-						<div class="card__descriptions">
+					</Card>
+					<Card
+						descriptions={
 							<span id="info">All items are updated every 30 minutes.</span>
-						</div>
-					</div>
+						}
+					></Card>
 					<footer>
 						<span>
 							This website is open source! Check it on
