@@ -1,6 +1,34 @@
 import { Card } from "./card.js";
+import { StreakersList, StreakersItem } from "./streakers-list.js";
+import { getDailyStreakers } from "../tools/get-daily-streakers.js";
+import { Cache } from "../utils/cache.js";
+
+async function getData() {
+	const cacheName = "daily-streakers";
+	const existingCache = Cache.get(cacheName);
+
+	if (existingCache) {
+		return existingCache as ReturnType<typeof getDailyStreakers>;
+	}
+
+	const data = await getDailyStreakers();
+
+	Cache.set(cacheName, data);
+	return data;
+}
 
 async function MainPage() {
+	const data = await getData();
+
+	const fullStreakersData = data.filter((player) => player.full_streaker);
+	const casualStreakersData = data.filter((player) => player.is_streaking);
+	const notStreakersData = data.filter(
+		(player) => !player.is_streaking && !player.full_streaker,
+	);
+
+	const showBest = false;
+	const showCurrent = false;
+
 	return (
 		<html lang="en">
 			<head>
@@ -35,27 +63,21 @@ async function MainPage() {
 							one which is really cool and should be appreciated for their hard
 							work."
 					>
-						<ul class="streakers-list" id="streakers-list-full">
-							<template id="template-streakers-list__item">
-								<li class="streakers-list__item">
-									<a
-										class="streakers-list__link"
-										target="_blank"
-										href="#"
-										aria-description=""
-									>
-										-
-									</a>
-									<div class="streakers-list__count" aria-description="">
-										0
-									</div>
-									<div class="streakers-list__insert-helper"></div>
-									<div class="streakers-list__tier">
-										<img class="streakers-list__tier-image" alt="" src="" />
-									</div>
-								</li>
-							</template>
-						</ul>
+						<StreakersList>
+							{fullStreakersData.map((player) => (
+								<StreakersItem
+									bestStreak={player.best_daily_streak || 0}
+									currentStreak={player.current_streak || 0}
+									hasPlayedToday={player.has_played_today || false}
+									tierIndex={(player.tier_change as number) || 0}
+									osuId={player.osu_id || 0}
+									playerName={player.name || ""}
+									previousStreak={player.previous_daily_streak || 0}
+									showBest={showBest}
+									showCurrent={showCurrent}
+								/>
+							))}
+						</StreakersList>
 					</Card>
 					<Card
 						title="Casual Streakers"
@@ -63,7 +85,21 @@ async function MainPage() {
 							less than the total days of daily challenge, which also needs to
 							be appreciated for their dedication."
 					>
-						<ul class="streakers-list" id="streakers-list-casual"></ul>
+						<StreakersList>
+							{casualStreakersData.map((player) => (
+								<StreakersItem
+									bestStreak={player.best_daily_streak || 0}
+									currentStreak={player.current_streak || 0}
+									hasPlayedToday={player.has_played_today || false}
+									tierIndex={(player.tier_change as number) || 0}
+									osuId={player.osu_id || 0}
+									playerName={player.name || ""}
+									previousStreak={player.previous_daily_streak || 0}
+									showBest={showBest}
+									showCurrent={showCurrent}
+								/>
+							))}
+						</StreakersList>
 					</Card>
 					<Card
 						title="Not Streaking"
@@ -71,7 +107,21 @@ async function MainPage() {
 							don't really play daily challenge anymore but still deserve
 							appreciations for the work that they've done."
 					>
-						<ul class="streakers-list" id="streakers-list-not"></ul>
+						<StreakersList>
+							{notStreakersData.map((player) => (
+								<StreakersItem
+									bestStreak={player.best_daily_streak || 0}
+									currentStreak={player.current_streak || 0}
+									hasPlayedToday={player.has_played_today || false}
+									tierIndex={(player.tier_change as number) || 0}
+									osuId={player.osu_id || 0}
+									playerName={player.name || ""}
+									previousStreak={player.previous_daily_streak || 0}
+									showBest={showBest}
+									showCurrent={showCurrent}
+								/>
+							))}
+						</StreakersList>
 					</Card>
 					<Card
 						descriptions={
@@ -92,14 +142,14 @@ async function MainPage() {
 						</span>
 					</footer>
 				</main>
-				<script
+				{/* <script
 					type="text/javascript"
 					src="./assets/storage-check.js?v=20250929"
 				></script>
 				<script
 					type="text/javascript"
 					src="./assets/daily-streakers.js?v=20260326"
-				></script>
+				></script> */}
 			</body>
 		</html>
 	);
