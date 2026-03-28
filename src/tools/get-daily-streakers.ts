@@ -41,7 +41,7 @@ async function getDailyStreakers() {
 			has_played_today: daily_tracker.has_played_today,
 			full_streaker: daily_tracker.full_streaker,
 			is_streaking: daily_tracker.is_streaking,
-			last_update: sql`concat(${daily_tracker.last_update},'+00')`,
+			last_update: sql<string>`concat(${daily_tracker.last_update},'+00')`,
 		})
 		.from(players)
 		.leftJoin(daily_tracker, eq(daily_tracker.osu_id, players.osu_id));
