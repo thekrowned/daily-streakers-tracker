@@ -2,7 +2,7 @@
   "name": "daily-streakers-tracker",
   "type": "module",
   "scripts": {
-    "dev": "tsx --env-file=.env --watch src/index.ts",
+    "dev": "tsx --env-file=.env --watch src/index.tsx",
     "build": "tsc",
     "start": "node --env-file=.env dist/src/index.js",
     "db:generate": "npx --env-file=.env drizzle-kit generate --config ./drizzle.config.ts",
