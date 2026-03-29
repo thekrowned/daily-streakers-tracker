@@ -19,6 +19,8 @@ async function getData() {
 
 type pageState = {
 	sort: string;
+	showCurrent?: boolean;
+	showBest?: boolean;
 };
 
 const sortOptions: {
@@ -33,7 +35,7 @@ const sortOptions: {
 ];
 
 async function MainPage(pageState: pageState) {
-	const { sort } = pageState;
+	const { sort, showBest: showBest, showCurrent: showCurrent } = pageState;
 	const currentSort =
 		sortOptions.find((s) => s.name === sort.split("_")[0]) || sortOptions[0];
 	const isReversed = sort.split("_")[1] === "rev";
@@ -146,8 +148,10 @@ async function MainPage(pageState: pageState) {
 		(player) => !player.is_streaking && !player.full_streaker,
 	);
 
-	const showBest = currentSort.name === "best-streak";
-	const showCurrent = currentSort.name === "current-streak";
+	// Force the internal state to show best/current whenever necessary
+	const internalShowBest = currentSort.name === "best-streak" || showBest;
+	const internalShowCurrent =
+		currentSort.name === "current-streak" || showCurrent;
 
 	const lastUpdates = data.map((players) => {
 		const dateString = players.last_update;
@@ -168,6 +172,12 @@ async function MainPage(pageState: pageState) {
 
 	const lastUpdate = new Date(_lastUpdate.text).toUTCString();
 
+	const currentParams = {
+		sort: sort,
+		"show-best": showBest ? "true" : "",
+		"show-current": showCurrent ? "true" : "",
+	};
+
 	return (
 		<html lang="en">
 			<head>
@@ -186,14 +196,56 @@ async function MainPage(pageState: pageState) {
 					<div class="sorter">
 						<label class="sorter__label">Sort by:</label>
 						<div class="sorter__list">
-							{sortOptions.map((s) => (
-								<a
-									class={`sorter__item ${currentSort.name === s.name ? "sorter__item--active" : ""}`}
-									href={`./?sort=${s.name}${currentSort.name === s.name && !isReversed ? "_rev" : ""}`}
-								>
-									{s.uiName}
-								</a>
-							))}
+							{sortOptions.map((s) => {
+								const sortParam = `${s.name}${currentSort.name === s.name && !isReversed ? "_rev" : ""}`;
+								const newParams = new URLSearchParams({
+									...currentParams,
+									sort: sortParam,
+								});
+
+								return (
+									<a
+										class={`sorter__item ${currentSort.name === s.name ? "sorter__item--active" : ""}`}
+										href={`./?${newParams}`}
+									>
+										{s.uiName}
+									</a>
+								);
+							})}
+							{/* Options for showing best & current streak */}
+							{(() => {
+								// Try to do the opposite of what's in the request
+								const newParams = new URLSearchParams({
+									...currentParams,
+									"show-current": showCurrent ? "" : "true",
+								});
+
+								// The state is determined by internal showBest parameter
+								return (
+									<a
+										class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}`}
+										href={`./?${newParams}`}
+									>
+										[{internalShowCurrent ? "v" : " "}] Show current streak
+									</a>
+								);
+							})()}
+							{(() => {
+								// show-best state, same as above
+								const newParams = new URLSearchParams({
+									...currentParams,
+									"show-best": showBest ? "" : "true",
+								});
+
+								return (
+									<a
+										class={`sorter__item ${showBest ? "sorter__item--active" : ""}`}
+										href={`./?${newParams}`}
+									>
+										[{internalShowBest ? "v" : " "}] Show best streak
+									</a>
+								);
+							})()}
 						</div>
 					</div>
 					<Card
@@ -212,8 +264,8 @@ async function MainPage(pageState: pageState) {
 									osuId={player.osu_id || 0}
 									playerName={player.name || ""}
 									previousStreak={player.previous_daily_streak || 0}
-									showBest={showBest}
-									showCurrent={showCurrent}
+									showBest={internalShowBest}
+									showCurrent={internalShowCurrent}
 								/>
 							))}
 						</StreakersList>
@@ -234,8 +286,8 @@ async function MainPage(pageState: pageState) {
 									osuId={player.osu_id || 0}
 									playerName={player.name || ""}
 									previousStreak={player.previous_daily_streak || 0}
-									showBest={showBest}
-									showCurrent={showCurrent}
+									showBest={internalShowBest}
+									showCurrent={internalShowCurrent}
 								/>
 							))}
 						</StreakersList>
@@ -256,8 +308,8 @@ async function MainPage(pageState: pageState) {
 									osuId={player.osu_id || 0}
 									playerName={player.name || ""}
 									previousStreak={player.previous_daily_streak || 0}
-									showBest={showBest}
-									showCurrent={showCurrent}
+									showBest={internalShowBest}
+									showCurrent={internalShowCurrent}
 								/>
 							))}
 						</StreakersList>

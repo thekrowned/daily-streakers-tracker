@@ -142,7 +142,13 @@ app.use(
 );
 
 app.get("/", async (c) => {
-	return c.render(<MainPage sort={c.req.query("sort") || ""} />);
+	return c.render(
+		<MainPage
+			sort={c.req.query("sort") || ""}
+			showBest={c.req.query("show-best") === "true"}
+			showCurrent={c.req.query("show-current") === "true"}
+		/>,
+	);
 });
 
 app.get(
