@@ -26,19 +26,24 @@ type pageState = {
 const sortOptions: {
 	name: string;
 	uiName: string;
+	defaultSort: "ascending" | "descending";
 }[] = [
-	{ name: "name", uiName: "Name" },
-	{ name: "rank", uiName: "Rank" },
-	{ name: "has-played", uiName: "Has Played" },
-	{ name: "current-streak", uiName: "Current Streak" },
-	{ name: "best-streak", uiName: "Best Streak" },
+	{ name: "name", uiName: "Name", defaultSort: "ascending" },
+	{ name: "rank", uiName: "Rank", defaultSort: "ascending" },
+	{ name: "has-played", uiName: "Has Played", defaultSort: "descending" },
+	{
+		name: "current-streak",
+		uiName: "Current Streak",
+		defaultSort: "descending",
+	},
+	{ name: "best-streak", uiName: "Best Streak", defaultSort: "descending" },
 ];
 
 async function MainPage(pageState: pageState) {
 	const { sort, showBest: showBest, showCurrent: showCurrent } = pageState;
 	const currentSort =
 		sortOptions.find((s) => s.name === sort.split("_")[0]) || sortOptions[0];
-	const isReversed = sort.split("_")[1] === "rev";
+	const isDescending = sort.split("_")[1] === "desc";
 
 	const data = await getData();
 
@@ -55,7 +60,7 @@ async function MainPage(pageState: pageState) {
 
 	switch (currentSort.name) {
 		case "name":
-			if (isReversed) {
+			if (isDescending) {
 				data.sort((_a, _b) => {
 					const a = String(_a.name);
 					const b = String(_b.name);
@@ -71,7 +76,7 @@ async function MainPage(pageState: pageState) {
 			break;
 
 		case "rank":
-			if (isReversed) {
+			if (isDescending) {
 				data.sort((_a, _b) => {
 					const a = Number(_a.rank_standard);
 					const b = Number(_b.rank_standard);
@@ -87,50 +92,50 @@ async function MainPage(pageState: pageState) {
 			break;
 
 		case "current-streak":
-			if (isReversed) {
+			if (isDescending) {
 				data.sort((_a, _b) => {
 					const a = Number(_a.current_streak);
 					const b = Number(_b.current_streak);
-					return a - b;
+					return b - a;
 				});
 			} else {
 				data.sort((_a, _b) => {
 					const a = Number(_a.current_streak);
 					const b = Number(_b.current_streak);
-					return b - a;
+					return a - b;
 				});
 			}
 			break;
 
 		case "best-streak":
-			if (isReversed) {
+			if (isDescending) {
 				data.sort((_a, _b) => {
 					const a = Number(_a.best_daily_streak);
 					const b = Number(_b.best_daily_streak);
-					return a - b;
+					return b - a;
 				});
 			} else {
 				data.sort((_a, _b) => {
 					const a = Number(_a.best_daily_streak);
 					const b = Number(_b.best_daily_streak);
-					return b - a;
+					return a - b;
 				});
 			}
 			break;
 
 		case "has-played":
 			// Convert the boolean into number
-			if (isReversed) {
+			if (isDescending) {
 				data.sort((_a, _b) => {
 					const a = Number(_a.has_played_today);
 					const b = Number(_b.has_played_today);
-					return a - b;
+					return b - a;
 				});
 			} else {
 				data.sort((_a, _b) => {
 					const a = Number(_a.has_played_today);
 					const b = Number(_b.has_played_today);
-					return b - a;
+					return a - b;
 				});
 			}
 			break;
@@ -197,7 +202,11 @@ async function MainPage(pageState: pageState) {
 						<label class="sorter__label">Sort by:</label>
 						<div class="sorter__list">
 							{sortOptions.map((s) => {
-								const sortParam = `${s.name}${currentSort.name === s.name && !isReversed ? "_rev" : ""}`;
+								const defaultSort =
+									s.defaultSort === "descending" ? "_desc" : "_asc";
+								const isActive = currentSort.name === s.name;
+								const sortPrefix = `${isActive ? (!isDescending ? "_desc" : "_asc") : defaultSort}`;
+								const sortParam = `${s.name}${sortPrefix}`;
 								const newParams = new URLSearchParams({
 									...currentParams,
 									sort: sortParam,
@@ -205,10 +214,17 @@ async function MainPage(pageState: pageState) {
 
 								return (
 									<a
-										class={`sorter__item ${currentSort.name === s.name ? "sorter__item--active" : ""}`}
+										class={`sorter__item ${isActive ? "sorter__item--active" : ""}`}
 										href={`./?${newParams}`}
 									>
 										{s.uiName}
+										<div class="sorter__indicator">
+											<img
+												class="sorter__indicator-image"
+												src={`./assets/sort${isActive ? (isDescending ? "_desc" : "_asc") : defaultSort}.png`}
+												alt=""
+											/>
+										</div>
 									</a>
 								);
 							})}
