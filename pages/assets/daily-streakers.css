@@ -187,6 +187,10 @@
 	opacity: 1;
 }
 
+.sorter__indicator--force-show .sorter__indicator-image {
+	opacity: 1;
+}
+
 @media (max-width: 576px) {
 }
 

@@ -242,7 +242,16 @@ async function MainPage(pageState: pageState) {
 										class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}`}
 										href={`./?${newParams}`}
 									>
-										[{internalShowCurrent ? "v" : " "}] Show current streak
+										Show current streak
+										<div
+											class={`sorter__indicator ${internalShowCurrent ? "sorter__indicator--force-show" : ""}`}
+										>
+											<img
+												class="sorter__indicator-image"
+												src="./assets/sort_check.png"
+												alt=""
+											/>
+										</div>
 									</a>
 								);
 							})()}
@@ -258,7 +267,16 @@ async function MainPage(pageState: pageState) {
 										class={`sorter__item ${showBest ? "sorter__item--active" : ""}`}
 										href={`./?${newParams}`}
 									>
-										[{internalShowBest ? "v" : " "}] Show best streak
+										Show best streak
+										<div
+											class={`sorter__indicator ${internalShowBest ? "sorter__indicator--force-show" : ""}`}
+										>
+											<img
+												class="sorter__indicator-image"
+												src="./assets/sort_check.png"
+												alt=""
+											/>
+										</div>
 									</a>
 								);
 							})()}
