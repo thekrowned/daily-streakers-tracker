@@ -243,14 +243,12 @@ async function MainPage(pageState: pageState) {
 									// The state is determined by internal showBest parameter
 									return (
 										<li
-											class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}`}
+											class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}  ${internalShowCurrent ? "sorter__item--force-show-indicator" : ""}`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
 												Show current streak
 											</a>
-											<div
-												class={`sorter__indicator ${internalShowCurrent ? "sorter__indicator--force-show" : ""}`}
-											>
+											<div class={`sorter__indicator`}>
 												<img
 													class="sorter__indicator-image"
 													src="./assets/sort_check.png"
@@ -269,14 +267,12 @@ async function MainPage(pageState: pageState) {
 
 									return (
 										<li
-											class={`sorter__item ${showBest ? "sorter__item--active" : ""}`}
+											class={`sorter__item ${showBest ? "sorter__item--active" : ""} ${internalShowBest ? "sorter__item--force-show-indicator" : ""}`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
 												Show best streak
 											</a>
-											<div
-												class={`sorter__indicator ${internalShowBest ? "sorter__indicator--force-show" : ""}`}
-											>
+											<div class={`sorter__indicator`}>
 												<img
 													class="sorter__indicator-image"
 													src="./assets/sort_check.png"

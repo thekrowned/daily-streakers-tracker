@@ -237,7 +237,7 @@
 	opacity: 1;
 }
 
-.sorter__indicator--force-show .sorter__indicator-image {
+.sorter__item--force-show-indicator .sorter__indicator-image {
 	opacity: 1;
 }
 
