@@ -69,12 +69,12 @@ function StreakersItem({
 			</a>
 			{showCurrent && currentStreak > 0 && (
 				<div class="streakers-list__count" aria-description="Current Streak">
-					{showPrevious || showBest ? `Curr: ${currentStreak}` : currentStreak}
+					{`Curr: ${currentStreak}`}
 				</div>
 			)}
 			{showBest && bestStreak > 0 && (
 				<div class="streakers-list__count" aria-description="Best Streak">
-					{showPrevious || showCurrent ? `Best: ${bestStreak}` : bestStreak}
+					{`Best: ${bestStreak}`}
 				</div>
 			)}
 			{showPrevious && (
