@@ -208,15 +208,43 @@
 	z-index: 1;
 }
 
+.sorter__link > span {
+	left: 0.5rem;
+	position: relative;
+	transition: linear 0.1s;
+}
+
+.sorter__item:hover .sorter__link > span {
+	left: 0;
+}
+
+.sorter__item--active .sorter__link > span {
+	left: 0;
+}
+
+.sorter__item--force-show-indicator .sorter__link > span {
+	left: 0;
+}
+
 .sorter__indicator {
 	position: relative;
 	height: 1rem;
 	width: 1rem;
 	transition: linear 0.1s;
+	left: -0.5rem;
+}
+
+.sorter__item:hover .sorter__indicator {
+	left: 0;
 }
 
 .sorter__item--active .sorter__indicator {
+	left: 0;
 	filter: invert(1);
+}
+
+.sorter__item--force-show-indicator .sorter__indicator {
+	left: 0;
 }
 
 .sorter__indicator-image {
