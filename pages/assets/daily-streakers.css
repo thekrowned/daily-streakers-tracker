@@ -135,11 +135,24 @@
 	color: var(--streakers-item-fallen-foreground);
 }
 
+.sorter {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
 .sorter__list {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: row;
 	gap: 0.3rem;
+	/* justify-content: center; */
+	align-items: center;
+}
+
+.sorter__label {
+	font-size: small;
+	font-weight: bold;
 }
 
 .sorter__item {

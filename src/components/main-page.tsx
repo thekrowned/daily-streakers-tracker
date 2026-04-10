@@ -199,8 +199,8 @@ async function MainPage(pageState: pageState) {
 				<main>
 					<Card>
 						<div class="sorter">
-							<label class="sorter__label">Sort by:</label>
 							<div class="sorter__list">
+								<span class="sorter__label">Sort by:</span>
 								{sortOptions.map((s) => {
 									const defaultSort =
 										s.defaultSort === "descending" ? "_desc" : "_asc";
@@ -228,7 +228,10 @@ async function MainPage(pageState: pageState) {
 										</a>
 									);
 								})}
+							</div>
+							<div class="sorter__list">
 								{/* Options for showing best & current streak */}
+								<span class="sorter__label">Options:</span>
 								{(() => {
 									// Try to do the opposite of what's in the request
 									const newParams = new URLSearchParams({
