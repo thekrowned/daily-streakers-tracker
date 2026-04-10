@@ -67,16 +67,35 @@ function StreakersItem({
 			>
 				{playerName}
 			</a>
-			{showCurrent && currentStreak > 0 && (
-				<div class="streakers-list__count" aria-description="Current Streak">
-					{`Curr: ${currentStreak}`}
+			{showCurrent &&
+			showBest &&
+			currentStreak > 0 &&
+			bestStreak > 0 &&
+			currentStreak === bestStreak ? (
+				<div
+					class="streakers-list__count"
+					aria-description="Current and Best Streak"
+				>
+					{`Curr & Best: ${currentStreak}`}
 				</div>
+			) : (
+				<>
+					{showCurrent && currentStreak > 0 && (
+						<div
+							class="streakers-list__count"
+							aria-description="Current Streak"
+						>
+							{`Curr: ${currentStreak}`}
+						</div>
+					)}
+					{showBest && bestStreak > 0 && (
+						<div class="streakers-list__count" aria-description="Best Streak">
+							{`Best: ${bestStreak}`}
+						</div>
+					)}
+				</>
 			)}
-			{showBest && bestStreak > 0 && (
-				<div class="streakers-list__count" aria-description="Best Streak">
-					{`Best: ${bestStreak}`}
-				</div>
-			)}
+
 			{showPrevious && (
 				<div class="streakers-list__count" aria-description="Previous Streak">
 					{`Prev: ${previousStreak}`}
