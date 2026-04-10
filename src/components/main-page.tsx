@@ -197,90 +197,92 @@ async function MainPage(pageState: pageState) {
 					<h1 class="header__title">Daily Streakers Tracker</h1>
 				</header>
 				<main>
-					<div class="sorter">
-						<label class="sorter__label">Sort by:</label>
-						<div class="sorter__list">
-							{sortOptions.map((s) => {
-								const defaultSort =
-									s.defaultSort === "descending" ? "_desc" : "_asc";
-								const isActive = currentSort.name === s.name;
-								const sortPrefix = `${isActive ? (!isDescending ? "_desc" : "_asc") : defaultSort}`;
-								const sortParam = `${s.name}${sortPrefix}`;
-								const newParams = new URLSearchParams({
-									...currentParams,
-									sort: sortParam,
-								});
+					<Card>
+						<div class="sorter">
+							<label class="sorter__label">Sort by:</label>
+							<div class="sorter__list">
+								{sortOptions.map((s) => {
+									const defaultSort =
+										s.defaultSort === "descending" ? "_desc" : "_asc";
+									const isActive = currentSort.name === s.name;
+									const sortPrefix = `${isActive ? (!isDescending ? "_desc" : "_asc") : defaultSort}`;
+									const sortParam = `${s.name}${sortPrefix}`;
+									const newParams = new URLSearchParams({
+										...currentParams,
+										sort: sortParam,
+									});
 
-								return (
-									<a
-										class={`sorter__item ${isActive ? "sorter__item--active" : ""}`}
-										href={`./?${newParams}`}
-									>
-										{s.uiName}
-										<div class="sorter__indicator">
-											<img
-												class="sorter__indicator-image"
-												src={`./assets/sort${isActive ? (isDescending ? "_desc" : "_asc") : defaultSort}.png`}
-												alt=""
-											/>
-										</div>
-									</a>
-								);
-							})}
-							{/* Options for showing best & current streak */}
-							{(() => {
-								// Try to do the opposite of what's in the request
-								const newParams = new URLSearchParams({
-									...currentParams,
-									"show-current": showCurrent ? "" : "true",
-								});
-
-								// The state is determined by internal showBest parameter
-								return (
-									<a
-										class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}`}
-										href={`./?${newParams}`}
-									>
-										Show current streak
-										<div
-											class={`sorter__indicator ${internalShowCurrent ? "sorter__indicator--force-show" : ""}`}
+									return (
+										<a
+											class={`sorter__item ${isActive ? "sorter__item--active" : ""}`}
+											href={`./?${newParams}`}
 										>
-											<img
-												class="sorter__indicator-image"
-												src="./assets/sort_check.png"
-												alt=""
-											/>
-										</div>
-									</a>
-								);
-							})()}
-							{(() => {
-								// show-best state, same as above
-								const newParams = new URLSearchParams({
-									...currentParams,
-									"show-best": showBest ? "" : "true",
-								});
+											{s.uiName}
+											<div class="sorter__indicator">
+												<img
+													class="sorter__indicator-image"
+													src={`./assets/sort${isActive ? (isDescending ? "_desc" : "_asc") : defaultSort}.png`}
+													alt=""
+												/>
+											</div>
+										</a>
+									);
+								})}
+								{/* Options for showing best & current streak */}
+								{(() => {
+									// Try to do the opposite of what's in the request
+									const newParams = new URLSearchParams({
+										...currentParams,
+										"show-current": showCurrent ? "" : "true",
+									});
 
-								return (
-									<a
-										class={`sorter__item ${showBest ? "sorter__item--active" : ""}`}
-										href={`./?${newParams}`}
-									>
-										Show best streak
-										<div
-											class={`sorter__indicator ${internalShowBest ? "sorter__indicator--force-show" : ""}`}
+									// The state is determined by internal showBest parameter
+									return (
+										<a
+											class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}`}
+											href={`./?${newParams}`}
 										>
-											<img
-												class="sorter__indicator-image"
-												src="./assets/sort_check.png"
-												alt=""
-											/>
-										</div>
-									</a>
-								);
-							})()}
+											Show current streak
+											<div
+												class={`sorter__indicator ${internalShowCurrent ? "sorter__indicator--force-show" : ""}`}
+											>
+												<img
+													class="sorter__indicator-image"
+													src="./assets/sort_check.png"
+													alt=""
+												/>
+											</div>
+										</a>
+									);
+								})()}
+								{(() => {
+									// show-best state, same as above
+									const newParams = new URLSearchParams({
+										...currentParams,
+										"show-best": showBest ? "" : "true",
+									});
+
+									return (
+										<a
+											class={`sorter__item ${showBest ? "sorter__item--active" : ""}`}
+											href={`./?${newParams}`}
+										>
+											Show best streak
+											<div
+												class={`sorter__indicator ${internalShowBest ? "sorter__indicator--force-show" : ""}`}
+											>
+												<img
+													class="sorter__indicator-image"
+													src="./assets/sort_check.png"
+													alt=""
+												/>
+											</div>
+										</a>
+									);
+								})()}
+							</div>
 						</div>
-					</div>
+					</Card>
 					<Card
 						title="Full Streakers"
 						descriptions="Full streakers are those who never break their streaks since day
