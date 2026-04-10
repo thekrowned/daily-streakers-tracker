@@ -217,7 +217,7 @@ async function MainPage(pageState: pageState) {
 											class={`sorter__item ${isActive ? "sorter__item--active" : ""}`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
-												{s.uiName}
+												<span>{s.uiName}</span>
 											</a>
 											<div class="sorter__indicator">
 												<img
@@ -246,7 +246,7 @@ async function MainPage(pageState: pageState) {
 											class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}  ${internalShowCurrent ? "sorter__item--force-show-indicator" : ""}`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
-												Show current streak
+												<span>Show current streak</span>
 											</a>
 											<div class={`sorter__indicator`}>
 												<img
@@ -270,7 +270,7 @@ async function MainPage(pageState: pageState) {
 											class={`sorter__item ${showBest ? "sorter__item--active" : ""} ${internalShowBest ? "sorter__item--force-show-indicator" : ""}`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
-												Show best streak
+												<span>Show best streak</span>
 											</a>
 											<div class={`sorter__indicator`}>
 												<img
