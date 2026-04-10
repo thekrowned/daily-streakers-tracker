@@ -10,9 +10,11 @@
 	--streakers-item-fallen-foreground: hsl(0, 0%, 100%);
 	--streakers-item-fallen-count: hsla(0, 0%, 100%, 0.25);
 
-	--sorter-item-background: hsla(0, 0%, 0%, 0);
+	--sorter-item-background: hsl(0, 0%, 90%);
 	--sorter-item-foreground: hsl(0, 0%, 0%);
-	--sorter-item-active-background: hsla(0, 0%, 0%, 0.15);
+	--sorter-item-hover-background: hsl(0, 0%, 70%);
+	--sorter-item-active-background: hsl(0, 0%, 30%);
+	--sorter-item-active-foreground: hsl(0, 0%, 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,9 +30,11 @@
 		--streakers-item-fallen-foreground: hsl(0, 0%, 0%);
 		--streakers-item-fallen-count: hsla(0, 0%, 0%, 0.2);
 
-		--sorter-item-background: hsla(0, 0%, 0%, 0);
+		--sorter-item-background: hsl(0, 0%, 10%);
 		--sorter-item-foreground: hsl(0, 0%, 100%);
-		--sorter-item-active-background: hsla(0, 0%, 100%, 0.15);
+		--sorter-item-hover-background: hsl(0, 0%, 40%);
+		--sorter-item-active-background: hsl(0, 0%, 80%);
+		--sorter-item-active-foreground: hsl(0, 0%, 0%);
 	}
 }
 
@@ -157,8 +161,8 @@
 }
 
 .sorter__item {
-	padding: 0.3rem 0.3rem;
-	border-radius: 0.3rem;
+	padding: 0.3rem 0.6rem;
+	border-radius: 1rem;
 	text-decoration: none;
 	background-color: var(--sorter-item-background);
 	color: var(--sorter-item-foreground);
@@ -166,12 +170,13 @@
 	display: flex;
 	gap: 0.1rem;
 	position: relative;
+	transition: linear 0.1s;
 	/* text-transform: uppercase; */
 	/* font-weight: 500; */
 }
 
 .sorter__item:hover {
-	background-color: var(--sorter-item-active-background);
+	background-color: var(--sorter-item-hover-background);
 }
 
 .sorter__item--active {
@@ -179,9 +184,17 @@
 	/* font-weight: bold; */
 }
 
+.sorter__item--active:hover {
+	background-color: var(--sorter-item-active-background);
+}
+
 .sorter__link {
 	text-decoration: none;
 	color: var(--sorter-item-foreground);
+}
+
+.sorter__item--active .sorter__link {
+	color: var(--sorter-item-active-foreground);
 }
 
 .sorter__link::before {
@@ -199,6 +212,11 @@
 	position: relative;
 	height: 1rem;
 	width: 1rem;
+	transition: linear 0.1s;
+}
+
+.sorter__item--active .sorter__indicator {
+	filter: invert(1);
 }
 
 .sorter__indicator-image {
@@ -208,6 +226,7 @@
 	object-fit: contain;
 	filter: invert(var(--inverted-when-dark));
 	opacity: 0;
+	transition: linear 0.1s;
 }
 
 .sorter__item:hover .sorter__indicator-image {
