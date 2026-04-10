@@ -215,7 +215,7 @@
 	line-height: 1rem;
 }
 
-.sorter__item:hover .sorter__link > span {
+.sorter__item--enable-moving-transition:hover .sorter__link > span {
 	left: 0;
 }
 
@@ -235,7 +235,7 @@
 	left: -0.5rem;
 }
 
-.sorter__item:hover .sorter__indicator {
+.sorter__item--enable-moving-transition:hover .sorter__indicator {
 	left: 0;
 }
 
@@ -258,7 +258,7 @@
 	transition: linear 0.1s;
 }
 
-.sorter__item:hover .sorter__indicator-image {
+.sorter__item--enable-moving-transition:hover .sorter__indicator-image {
 	opacity: 1;
 }
 

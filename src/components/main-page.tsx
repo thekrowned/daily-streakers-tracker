@@ -190,7 +190,7 @@ async function MainPage(pageState: pageState) {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<title>Daily Streakers Tracker</title>
 				<link rel="stylesheet" href="./assets/global.css?v=20260216-1955" />
-				<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260410" />
+				<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260411" />
 			</head>
 			<body>
 				<header class="header">
@@ -214,7 +214,7 @@ async function MainPage(pageState: pageState) {
 
 									return (
 										<li
-											class={`sorter__item ${isActive ? "sorter__item--active" : ""}`}
+											class={`sorter__item ${isActive ? "sorter__item--active" : ""} sorter__item--enable-moving-transition`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
 												<span>{s.uiName}</span>
