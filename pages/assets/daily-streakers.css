@@ -212,6 +212,7 @@
 	left: 0.5rem;
 	position: relative;
 	transition: linear 0.1s;
+	line-height: 1rem;
 }
 
 .sorter__item:hover .sorter__link > span {
