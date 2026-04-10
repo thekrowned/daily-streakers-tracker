@@ -199,7 +199,7 @@ async function MainPage(pageState: pageState) {
 				<main>
 					<Card>
 						<div class="sorter">
-							<div class="sorter__list">
+							<ul class="sorter__list">
 								<span class="sorter__label">Sort by:</span>
 								{sortOptions.map((s) => {
 									const defaultSort =
@@ -213,11 +213,12 @@ async function MainPage(pageState: pageState) {
 									});
 
 									return (
-										<a
+										<li
 											class={`sorter__item ${isActive ? "sorter__item--active" : ""}`}
-											href={`./?${newParams}`}
 										>
-											{s.uiName}
+											<a class="sorter__link" href={`./?${newParams}`}>
+												{s.uiName}
+											</a>
 											<div class="sorter__indicator">
 												<img
 													class="sorter__indicator-image"
@@ -225,11 +226,11 @@ async function MainPage(pageState: pageState) {
 													alt=""
 												/>
 											</div>
-										</a>
+										</li>
 									);
 								})}
-							</div>
-							<div class="sorter__list">
+							</ul>
+							<ul class="sorter__list">
 								{/* Options for showing best & current streak */}
 								<span class="sorter__label">Options:</span>
 								{(() => {
@@ -241,11 +242,12 @@ async function MainPage(pageState: pageState) {
 
 									// The state is determined by internal showBest parameter
 									return (
-										<a
+										<li
 											class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}`}
-											href={`./?${newParams}`}
 										>
-											Show current streak
+											<a class="sorter__link" href={`./?${newParams}`}>
+												Show current streak
+											</a>
 											<div
 												class={`sorter__indicator ${internalShowCurrent ? "sorter__indicator--force-show" : ""}`}
 											>
@@ -255,7 +257,7 @@ async function MainPage(pageState: pageState) {
 													alt=""
 												/>
 											</div>
-										</a>
+										</li>
 									);
 								})()}
 								{(() => {
@@ -266,11 +268,12 @@ async function MainPage(pageState: pageState) {
 									});
 
 									return (
-										<a
+										<li
 											class={`sorter__item ${showBest ? "sorter__item--active" : ""}`}
-											href={`./?${newParams}`}
 										>
-											Show best streak
+											<a class="sorter__link" href={`./?${newParams}`}>
+												Show best streak
+											</a>
 											<div
 												class={`sorter__indicator ${internalShowBest ? "sorter__indicator--force-show" : ""}`}
 											>
@@ -280,10 +283,10 @@ async function MainPage(pageState: pageState) {
 													alt=""
 												/>
 											</div>
-										</a>
+										</li>
 									);
 								})()}
-							</div>
+							</ul>
 						</div>
 					</Card>
 					<Card

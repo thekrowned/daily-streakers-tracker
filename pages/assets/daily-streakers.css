@@ -146,6 +146,7 @@
 	flex-wrap: wrap;
 	flex-direction: row;
 	gap: 0.3rem;
+	padding: 0px;
 	/* justify-content: center; */
 	align-items: center;
 }
@@ -164,6 +165,7 @@
 	font-size: small;
 	display: flex;
 	gap: 0.1rem;
+	position: relative;
 	/* text-transform: uppercase; */
 	/* font-weight: 500; */
 }
@@ -175,6 +177,22 @@
 .sorter__item--active {
 	background-color: var(--sorter-item-active-background);
 	/* font-weight: bold; */
+}
+
+.sorter__link {
+	text-decoration: none;
+	color: var(--sorter-item-foreground);
+}
+
+.sorter__link::before {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	content: "";
+	background-color: transparent;
+	z-index: 1;
 }
 
 .sorter__indicator {
