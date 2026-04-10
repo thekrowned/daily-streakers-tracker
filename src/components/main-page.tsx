@@ -197,7 +197,6 @@ async function MainPage(pageState: pageState) {
 					<h1 class="header__title">Daily Streakers Tracker</h1>
 				</header>
 				<main>
-					<noscript>Please enable JavaScript</noscript>
 					<div class="sorter">
 						<label class="sorter__label">Sort by:</label>
 						<div class="sorter__list">
