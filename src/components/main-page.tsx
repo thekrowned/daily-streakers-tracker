@@ -198,7 +198,7 @@ async function MainPage(pageState: pageState) {
 				</header>
 				<main>
 					<Card>
-						<div class="sorter">
+						<div class="sorter" hx-boost>
 							<ul class="sorter__list">
 								<span class="sorter__label">Sort by:</span>
 								{sortOptions.map((s) => {
@@ -373,6 +373,10 @@ async function MainPage(pageState: pageState) {
 						</span>
 					</footer>
 				</main>
+				<script
+					type="text/javascript"
+					src="./library/htmx.min.js?rev=20260411"
+				></script>
 				{/* <script
 					type="text/javascript"
 					src="./assets/storage-check.js?v=20250929"
