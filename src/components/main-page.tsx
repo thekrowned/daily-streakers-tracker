@@ -190,7 +190,7 @@ async function MainPage(pageState: pageState) {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<title>Daily Streakers Tracker</title>
 				<link rel="stylesheet" href="./assets/global.css?v=20260216-1955" />
-				<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260329" />
+				<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260410" />
 			</head>
 			<body>
 				<header class="header">
