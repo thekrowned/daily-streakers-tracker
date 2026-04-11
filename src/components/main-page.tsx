@@ -39,10 +39,29 @@ const sortOptions: {
 	{ name: "best-streak", uiName: "Best Streak", defaultSort: "descending" },
 ];
 
+const showOptions: {
+	name: string;
+	uiName: string;
+	forceEnabledBy?: string[]; // allow show options to be forcibly enabled by any specified sort options
+}[] = [
+	{
+		name: "show-current",
+		uiName: "Show current streak",
+		forceEnabledBy: ["current-streak"],
+	},
+	{
+		name: "show-best",
+		uiName: "Show best streak",
+		forceEnabledBy: ["best-streak"],
+	},
+];
+
 async function MainPage({ queries }: { queries: Record<string, string> }) {
 	const sort = queries?.["sort"] || "";
-	const showBest = queries?.["show-best"] === "true" || false;
-	const showCurrent = queries?.["show-current"] === "true" || false;
+	const showBest = Object.keys(queries).includes("show-best") ? true : false;
+	const showCurrent = Object.keys(queries).includes("show-current")
+		? true
+		: false;
 
 	const currentSort =
 		sortOptions.find((s) => s.name === sort.split("_")[0]) || sortOptions[0];
@@ -156,11 +175,6 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 		(player) => !player.is_streaking && !player.full_streaker,
 	);
 
-	// Force the internal state to show best/current whenever necessary
-	const internalShowBest = currentSort.name === "best-streak" || showBest;
-	const internalShowCurrent =
-		currentSort.name === "current-streak" || showCurrent;
-
 	const lastUpdates = data.map((players) => {
 		const dateString = players.last_update;
 		const dateObject = new Date(dateString);
@@ -180,11 +194,28 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 
 	const lastUpdate = new Date(_lastUpdate.text).toUTCString();
 
-	const currentParams = {
+	const userEnabledShowOptions: Record<string, string> = {};
+
+	showOptions.forEach((s) => {
+		if (Object.keys(queries).includes(s.name)) {
+			userEnabledShowOptions[s.name] = "";
+		}
+	});
+
+	const currentParams: Record<string, string> = {
 		sort: sort,
-		"show-best": showBest ? "true" : "",
-		"show-current": showCurrent ? "true" : "",
+		...userEnabledShowOptions,
 	};
+
+	// Force the internal state to show best/current whenever necessary
+	const internalShowBest =
+		showOptions
+			.find((opt) => opt.name == "show-best")
+			?.forceEnabledBy?.includes(currentSort.name) || showBest;
+	const internalShowCurrent =
+		showOptions
+			.find((opt) => opt.name == "show-current")
+			?.forceEnabledBy?.includes(currentSort.name) || showCurrent;
 
 	return (
 		<html lang="en">
@@ -236,20 +267,30 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 							<ul class="sorter__list">
 								{/* Options for showing best & current streak */}
 								<span class="sorter__label">Options:</span>
-								{(() => {
+								{showOptions.map((s) => {
+									const newParamsObject = { ...currentParams };
+									const userEnabled = Object.keys(newParamsObject).includes(
+										s.name,
+									);
+									const forceEnabled = s.forceEnabledBy?.includes(
+										currentSort.name,
+									);
+
 									// Try to do the opposite of what's in the request
-									const newParams = new URLSearchParams({
-										...currentParams,
-										"show-current": showCurrent ? "" : "true",
-									});
+									if (userEnabled) {
+										delete newParamsObject[s.name];
+									} else {
+										newParamsObject[s.name] = "";
+									}
 
-									// The state is determined by internal showBest parameter
+									const newParams = new URLSearchParams(newParamsObject);
+
 									return (
 										<li
-											class={`sorter__item ${showCurrent ? "sorter__item--active" : ""}  ${internalShowCurrent ? "sorter__item--force-show-indicator" : ""}`}
+											class={`sorter__item ${userEnabled ? "sorter__item--active" : ""} ${forceEnabled ? "sorter__item--force-show-indicator" : ""}`}
 										>
 											<a class="sorter__link" href={`./?${newParams}`}>
-												<span>Show current streak</span>
+												<span>{s.uiName}</span>
 											</a>
 											<div class={`sorter__indicator`}>
 												<img
@@ -260,31 +301,7 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 											</div>
 										</li>
 									);
-								})()}
-								{(() => {
-									// show-best state, same as above
-									const newParams = new URLSearchParams({
-										...currentParams,
-										"show-best": showBest ? "" : "true",
-									});
-
-									return (
-										<li
-											class={`sorter__item ${showBest ? "sorter__item--active" : ""} ${internalShowBest ? "sorter__item--force-show-indicator" : ""}`}
-										>
-											<a class="sorter__link" href={`./?${newParams}`}>
-												<span>Show best streak</span>
-											</a>
-											<div class={`sorter__indicator`}>
-												<img
-													class="sorter__indicator-image"
-													src="./assets/sort_check.png"
-													alt=""
-												/>
-											</div>
-										</li>
-									);
-								})()}
+								})}
 							</ul>
 						</div>
 					</Card>
