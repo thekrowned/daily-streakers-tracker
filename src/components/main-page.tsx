@@ -39,8 +39,11 @@ const sortOptions: {
 	{ name: "best-streak", uiName: "Best Streak", defaultSort: "descending" },
 ];
 
-async function MainPage(pageState: pageState) {
-	const { sort, showBest: showBest, showCurrent: showCurrent } = pageState;
+async function MainPage({ queries }: { queries: Record<string, string> }) {
+	const sort = queries?.["sort"] || "";
+	const showBest = queries?.["show-best"] === "true" || false;
+	const showCurrent = queries?.["show-current"] === "true" || false;
+
 	const currentSort =
 		sortOptions.find((s) => s.name === sort.split("_")[0]) || sortOptions[0];
 	const isDescending = sort.split("_")[1] === "desc";
