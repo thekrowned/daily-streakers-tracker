@@ -3,95 +3,30 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Daily Streakers Tracker</title>
-		<link rel="stylesheet" href="./assets/global.css?v=20260216-1955" />
-		<link rel="stylesheet" href="./assets/daily-streakers.css?v=20260117" />
+		<title>Uh oh!</title>
+		<style>
+			body {
+				background-color: hsl(0, 0%, 85%);
+				color: hsl(0, 0%, 0%);
+			}
+
+			@media (prefers-color-scheme: dark) {
+				body {
+					background-color: hsl(0, 0%, 10%);
+					color: hsl(0, 0%, 100%);
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<header class="header">
-			<h1 class="header__title">Daily Streakers Tracker</h1>
-		</header>
-		<main>
-			<noscript>Please enable JavaScript</noscript>
-			<div class="sorter">
-				<label class="sorter__label" for="sorter__select">Sort by:</label>
-				<select name="sorter__select" id="sorter__select">
-					<option value="name">Name</option>
-					<option value="rank">Rank</option>
-					<option value="played">Has played</option>
-					<option value="not_played">Has not played</option>
-					<option value="streak">Current streak</option>
-					<option value="best_daily_streak">Best streak</option>
-				</select>
-			</div>
-			<div class="card">
-				<div class="card__title">Full Streakers</div>
-				<div class="card__descriptions">
-					Full streakers are those who never break their streaks since day one
-					which is really cool and should be appreciated for their hard work.
-				</div>
-				<ul class="streakers-list" id="streakers-list-full">
-					<template id="template-streakers-list__item">
-						<li class="streakers-list__item">
-							<a
-								class="streakers-list__link"
-								target="_blank"
-								href="#"
-								aria-description=""
-							>
-								-
-							</a>
-							<div class="streakers-list__count" aria-description="">0</div>
-							<div class="streakers-list__insert-helper"></div>
-							<div class="streakers-list__tier">
-								<img class="streakers-list__tier-image" alt="" src="" />
-							</div>
-						</li>
-					</template>
-				</ul>
-			</div>
-			<div class="card">
-				<div class="card__title">Casual Streakers</div>
-				<div class="card__descriptions">
-					Casual streakers are equally cool players whose streak value is less
-					than the total days of daily challenge, which also needs to be
-					appreciated for their dedication.
-				</div>
-				<ul class="streakers-list" id="streakers-list-casual"></ul>
-			</div>
-			<div class="card">
-				<div class="card__title">Not Streaking</div>
-				<div class="card__descriptions">
-					These players are former full streakers or casual streakers who don't
-					really play daily challenge anymore but still deserve appreciations
-					for the work that they've done.
-				</div>
-				<ul class="streakers-list" id="streakers-list-not"></ul>
-			</div>
-			<div class="card">
-				<div class="card__descriptions">
-					<span id="info">All items are updated every 30 minutes.</span>
-				</div>
-			</div>
-			<footer>
-				<span>
-					This website is open source! Check it on
-					<a
-						href="https://github.com/thekrowned/daily-streakers-tracker"
-						target="_blank"
-						rel="noopener noreferrer"
-						>GitHub</a
-					>.
-				</span>
-			</footer>
-		</main>
-		<script
-			type="text/javascript"
-			src="./assets/storage-check.js?v=20250929"
-		></script>
-		<script
-			type="text/javascript"
-			src="./assets/daily-streakers.js?v=20260326"
-		></script>
+		<h1>Uh oh!</h1>
+		<p>You're not supposed to see this page.</p>
+		<ul>
+			<li>If you're here by accident, please contact the developer.</li>
+			<li>
+				If you've accessed this page by going to "index.html", please note that
+				this static page has been deprecated.
+			</li>
+		</ul>
 	</body>
 </html>
