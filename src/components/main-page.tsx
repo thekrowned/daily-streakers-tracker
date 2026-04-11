@@ -63,7 +63,7 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 		? true
 		: false;
 
-	const currentSort =
+	const userSort =
 		sortOptions.find((s) => s.name === sort.split("_")[0]) || sortOptions[0];
 	const isDescending = sort.split("_")[1] === "desc";
 
@@ -80,7 +80,7 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 		}
 	});
 
-	switch (currentSort.name) {
+	switch (userSort.name) {
 		case "name":
 			if (isDescending) {
 				data.sort((_a, _b) => {
@@ -202,7 +202,7 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 		}
 	});
 
-	const currentParams: Record<string, string> = {
+	const userParams: Record<string, string> = {
 		sort: sort,
 		...userEnabledShowOptions,
 	};
@@ -211,11 +211,11 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 	const internalShowBest =
 		showOptions
 			.find((opt) => opt.name == "show-best")
-			?.forceEnabledBy?.includes(currentSort.name) || showBest;
+			?.forceEnabledBy?.includes(userSort.name) || showBest;
 	const internalShowCurrent =
 		showOptions
 			.find((opt) => opt.name == "show-current")
-			?.forceEnabledBy?.includes(currentSort.name) || showCurrent;
+			?.forceEnabledBy?.includes(userSort.name) || showCurrent;
 
 	return (
 		<html lang="en">
@@ -238,11 +238,11 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 								{sortOptions.map((s) => {
 									const defaultSort =
 										s.defaultSort === "descending" ? "_desc" : "_asc";
-									const isActive = currentSort.name === s.name;
+									const isActive = userSort.name === s.name;
 									const sortPrefix = `${isActive ? (!isDescending ? "_desc" : "_asc") : defaultSort}`;
 									const sortParam = `${s.name}${sortPrefix}`;
 									const newParams = new URLSearchParams({
-										...currentParams,
+										...userParams,
 										sort: sortParam,
 									});
 
@@ -268,12 +268,12 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 								{/* Options for showing best & current streak */}
 								<span class="sorter__label">Options:</span>
 								{showOptions.map((s) => {
-									const newParamsObject = { ...currentParams };
+									const newParamsObject = { ...userParams };
 									const userEnabled = Object.keys(newParamsObject).includes(
 										s.name,
 									);
 									const forceEnabled = s.forceEnabledBy?.includes(
-										currentSort.name,
+										userSort.name,
 									);
 
 									// Try to do the opposite of what's in the request
