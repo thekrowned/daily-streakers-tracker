@@ -259,6 +259,12 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 													src={`./assets/sort${isActive ? (isDescending ? "_desc" : "_asc") : defaultSort}.png`}
 													alt=""
 												/>
+												{isActive && (
+													<span class="sr-only">
+														(Active, currently&nbsp;
+														{isDescending ? "descending" : "ascending"})
+													</span>
+												)}
 											</div>
 										</li>
 									);
@@ -298,6 +304,12 @@ async function MainPage({ queries }: { queries: Record<string, string> }) {
 													src="./assets/sort_check.png"
 													alt=""
 												/>
+												{userEnabled && <span class="sr-only">(Active)</span>}
+												{forceEnabled && !userEnabled && (
+													<span class="sr-only">
+														(Required by the sort option)
+													</span>
+												)}
 											</div>
 										</li>
 									);
