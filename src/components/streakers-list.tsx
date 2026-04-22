@@ -63,9 +63,9 @@ function StreakersItem({
 				class="streakers-list__link"
 				target="_blank"
 				href={`https://osu.ppy.sh/users/${osuId}`}
-				aria-description={hasPlayedToday ? "Played today" : ""}
 			>
-				{playerName}
+				<span>{playerName}</span>
+				{hasPlayedToday && <span class="sr-only">&nbsp;(played)</span>}
 			</a>
 			{showCurrent &&
 			showBest &&
@@ -104,11 +104,8 @@ function StreakersItem({
 			{/* <div class="streakers-list__insert-helper"></div> */}
 			{arrowTierSrc && (
 				<div class="streakers-list__tier">
-					<img
-						class="streakers-list__tier-image"
-						alt={altTier}
-						src={arrowTierSrc}
-					/>
+					<img class="streakers-list__tier-image" alt={""} src={arrowTierSrc} />
+					{altTier && <span class="sr-only">{altTier}</span>}
 				</div>
 			)}
 		</li>
